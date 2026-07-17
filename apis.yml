@@ -1,0 +1,27 @@
+aid: owler
+name: Owler
+description: 'Owler is a company surfaced as a portfolio company of norwest-venture-partners and added
+  to the API Evangelist network as a stub for enrichment. Sector: unknown. This profile is a lead awaiting
+  the enrichment pipeline.'
+url: https://raw.githubusercontent.com/api-evangelist/owler/refs/heads/main/apis.yml
+x-type: company
+x-source: vc-portfolio
+x-backed-by:
+- norwest-venture-partners
+x-tier: stub
+x-tier-reason: portfolio-lead
+specificationVersion: '0.20'
+created: '2026-07-17'
+modified: '2026-07-17'
+tags:
+- Company
+- Unknown
+apis: []
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: APIs.json
+  email: info@apis.io
+common:
+- type: Website
+  url: https://corp.owler.com
