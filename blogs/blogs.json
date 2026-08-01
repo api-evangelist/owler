@@ -1,0 +1,14 @@
+{
+  "repo": "owler",
+  "feeds": [
+    {
+      "source": "https://corp.owler.com/integrations",
+      "feed_url": "https://corp.owler.com/integrations",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-07-25T15:00:33Z"
+}
