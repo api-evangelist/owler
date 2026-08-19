@@ -1,0 +1,180 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/owler-enterprise-api-openapi.json
+docs: https://developers.owler.com/
+summary: >-
+  The Owler Enterprise API is a small, uniform, read-only REST surface. Six operations, all GET,
+  all authenticated the same way, all returning one of three JSON envelopes. There is no write
+  path, no request body, no bulk job, no webhook and no streaming channel anywhere in the
+  contract. Everything below is derived from the published OpenAPI 3.0.1 definition; Owler
+  publishes no separate prose conventions guide, so anything the spec does not state is recorded
+  as unknown rather than guessed.
+
+authentication:
+  style: api-key
+  transport: request header
+  parameter: x-api-key
+  scheme_name: api_key
+  applied: >-
+    per-operation — every operation carries a security requirement naming api_key; there is no
+    top-level `security` block, so the scheme is declared operation by operation
+  oauth: false
+  scopes: false
+  failure_status: 403
+  failure_description: Authentication Failed
+  provisioning: >-
+    Keys are issued through the Owler data-licensing sales process (corp.owler.com/data-licensing).
+    There is no self-serve key generation and no documented key rotation, expiry or scoping model.
+  see: authentication/owler-authentication.yml
+
+versioning:
+  scheme: uri-path
+  current: v1
+  note: >-
+    Every path is prefixed /v1/. The DOCUMENT version is separately labelled "v3.0"
+    (info.version) and the portal is branded "Owler Enterprise API" v3 — so the product
+    generation (v3) and the URI version (v1) do not track each other. An integrator pins the URI
+    path, not the document version.
+  breaking_change_policy: null
+  breaking_change_policy_note: Owler publishes no versioning or breaking-change policy.
+  see: lifecycle/owler-lifecycle.yml
+
+content_negotiation:
+  default: application/json
+  mechanism: query parameter
+  parameter: format
+  values: [json, xml]
+  default_value: json
+  note: >-
+    Unusually, response format is selected with a `?format=` QUERY PARAMETER rather than an
+    Accept header. Every one of the six operations accepts it. The spec only declares an
+    application/json response body, so the XML shape is undocumented even though the parameter
+    advertises it. Accept-header negotiation is not documented.
+
+pagination:
+  style: opaque cursor
+  parameter: pagination_id
+  applies_to:
+  - getCompetitorsForWebsite
+  - getCompetitorsForId
+  - getFeedsByWebsite
+  - getFeeds
+  response_field: pagination_id
+  first_page_sentinel:
+    competitor_operations: "*"
+    feed_operations: "" # blank string
+  first_page_sentinel_note: >-
+    The two families disagree. The competitor operations document "Pass pagination_id as * in the
+    first API request"; the feed operations document "Pass pagination_id as blank in the first API
+    request". A client cannot use one code path for both — this is a real inconsistency in the
+    published contract, not a transcription error.
+  page_size:
+    parameter: limit
+    default: 10
+    max: 100
+    applies_to: [getFeedsByWebsite, getFeeds]
+    note: >-
+      `limit` is declared as type string, not integer, in the spec. The competitor operations
+      expose no page-size control at all.
+  termination: >-
+    Not documented. The spec does not state what pagination_id contains when the last page has
+    been returned.
+
+batching:
+  supported: true
+  operations: [getFeeds, getFeedsByWebsite]
+  parameters:
+    getFeeds: 'company_id — comma-separated Owler company ids, maximum 10'
+    getFeedsByWebsite: 'domain — comma-separated company websites, maximum 10'
+  limit: 10 identifiers per request
+  note: >-
+    Only the Feed API batches. Company Premium and Competitor Premium are strictly one lookup per
+    request, so enriching N companies costs N calls against whatever the account's rate allowance
+    is.
+
+lookup_keys:
+  pattern: >-
+    Every product is addressable by EITHER a domain or an Owler company id, and the id is returned
+    on every company object, so domain -> id is the normal first hop for a bulk workflow.
+  keys:
+  - key: website / domain
+    used_by: [getCompanyByWebsite, getCompetitorsForWebsite, getFeedsByWebsite]
+    position: 'path segment (website) or query (domain)'
+  - key: companyId
+    used_by: [getCompanyById, getCompetitorsForId, getFeeds]
+    position: 'path segment (companyId) or query (company_id)'
+    type: 'string in the request, integer (company_id) in every response body'
+    note: >-
+      The same identifier is typed as a string on the way in and an integer on the way out. A
+      strictly-typed client must coerce.
+
+filtering:
+- parameter: category
+  operations: [getFeeds, getFeedsByWebsite]
+  values: [NEWS, PRESS, FUNDING, ACQUISITION, PEOPLE, BLOG, VIDEOS]
+  multiple: comma-separated
+  default: all categories when omitted
+
+idempotency:
+  supported: false
+  idempotency_key_header: null
+  note: >-
+    Owler documents no idempotency-key mechanism, and no `Idempotency` pointer is wired into
+    apis.yml. The API happens to be retry-safe in practice because all six operations are GETs
+    and the surface is read-only (RFC 9110 safe methods), but that is a consequence of having no
+    write path — it is NOT an idempotency contract, and it must not be scored as one. If Owler
+    ever ships a write operation there is no published key mechanism to make it safe.
+
+request_tracing:
+  request_id_header: null
+  correlation_header: null
+  note: >-
+    No request-id or correlation header is documented in the spec or the portal. Because the API
+    is fronted by AWS API Gateway, an `x-amzn-RequestId` / `x-amz-apigw-id` pair is likely present
+    on live responses, but this pipeline could not observe one without a key, so nothing is
+    asserted.
+
+error_envelope:
+  format: undocumented
+  rfc9457: false
+  note: >-
+    Every non-2xx response in the spec (400, 403, 404, 429, 500) carries a one-line description
+    and NO content block, so the error body shape is entirely unspecified. There is no
+    application/problem+json media type, no error code registry and no documented error field
+    names. This is the single largest machine-readability gap in the contract.
+  see: errors/owler-problem-types.yml
+
+rate_limit_signaling:
+  status_on_exhaustion: 429
+  headers: null
+  retry_after: null
+  note: >-
+    429 Too Many Requests is declared on all six operations, so a limit demonstrably exists and is
+    enforced, but no limit value, window, header family or Retry-After behavior is published
+    anywhere. An agent can detect exhaustion but cannot anticipate it.
+  see: rate-limits/owler-rate-limits.yml
+
+expansion_and_sparse_fields:
+  supported: false
+  note: >-
+    No field-selection, expansion or sparse-fieldset parameter exists. Company Premium always
+    returns the full 26-field object including nested ceo, hq_address, stock, funding[] and
+    acquisition[].
+
+metadata:
+  custom_metadata: false
+  note: Owler's objects are Owler-owned; there is no customer-writable metadata surface.
+
+webhooks:
+  supported: false
+  note: >-
+    No webhook, callback or event-subscription surface is documented. Owler's "instant alerts" are
+    delivered to humans through the app, email and the Slack/Teams integrations, not to an
+    application endpoint. Freshness for an API consumer is poll-only, via the Feed API. No
+    asyncapi/ artifact was written and no Webhooks pointer was emitted.
+
+transport:
+  https_only: true
+  http2: 'not documented'
+  base_url: https://apiv2.owler.com
+  cors: 'not documented'

@@ -1,0 +1,103 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/owler-enterprise-api-openapi.json
+docs: https://developers.owler.com/
+summary: >-
+  Derived from the published OpenAPI 3.0.1 plus live probes. Owler asserts no compliance program
+  publicly — no trust center, no certification page, no security.txt — so nothing in the commercial
+  compliance family is claimed here and NO `Compliance` or `TrustCenter` pointer is wired into
+  apis.yml. The API conforms to OpenAPI 3.0.1 and to basic HTTP/REST semantics, and to essentially
+  nothing else: no OAuth, no OIDC, no RFC 9457 errors, no standard rate-limit headers, no
+  hypermedia, no cursor standard.
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: 'openapi: 3.0.1 document published at https://developers-v3.owler.com/apis/api3-swagger.json
+    and rendered by the Swagger UI portal at https://developers.owler.com/'
+- id: rest-http
+  conforms: true
+  evidence: Resource-oriented URI paths, GET-only safe methods, standard status codes (200/400/403/404/429/500).
+- id: https-only
+  conforms: true
+  evidence: servers[0] is https://apiv2.owler.com; no http scheme is offered.
+- id: api-key-header-auth
+  conforms: true
+  evidence: components.securitySchemes.api_key — type apiKey, in header, name x-api-key.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 security scheme in the spec; /.well-known/oauth-authorization-server returns
+    no document on any Owler host.
+- id: oidc
+  conforms: false
+  evidence: No openIdConnect scheme; /.well-known/openid-configuration returns no document on any
+    Owler host.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: No response declares application/problem+json; every 4xx/5xx response object in the
+    spec has a description and no content block at all.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt probed on five Owler hosts on 2026-08-14 — no document
+    returned (corp.owler.com 404; apiv2/developers/developers-v3 403 route-miss; www 403 bot
+    challenge).
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No deprecation policy and no Sunset/Deprecation header documented; the previous API
+    generation on api.owler.com was retired with no published notice.
+- id: rfc8615-well-known
+  conforms: false
+  evidence: well-known/owler-well-known.yml — zero documents found across all hosts.
+- id: rate-limit-headers
+  conforms: false
+  evidence: 429 is declared on all six operations but no X-RateLimit-*, RateLimit-* or Retry-After
+    header is documented.
+- id: cursor-pagination
+  conforms: partial
+  evidence: >-
+    An opaque `pagination_id` cursor is implemented on the competitor and feed operations, but the
+    first-page sentinel is inconsistent between the two families ("*" for competitors, blank for
+    feeds) and page termination is undocumented. It is a cursor, not a standard-conformant one.
+- id: idempotency
+  conforms: not-applicable
+  evidence: >-
+    Read-only surface — all six operations are GETs, so there is no unsafe method needing an
+    idempotency key. Owler documents no Idempotency-Key mechanism and no such pointer is wired.
+- id: asyncapi
+  conforms: not-applicable
+  evidence: No event, webhook or streaming surface exists to describe.
+- id: json-schema
+  conforms: partial
+  evidence: 12 reusable components.schemas are defined and referenced ($ref) across the three
+    response envelopes; no `required` arrays, no formats, no examples are declared on any of them.
+- id: content-negotiation
+  conforms: false
+  evidence: Response format is selected with a `?format=json|xml` query parameter rather than an
+    Accept header, and only application/json is declared in the spec despite xml being offered.
+- id: mcp
+  conforms: false
+  evidence: No MCP server published; see mcp/owler-mcp.yml (deployment mode none).
+- id: a2a
+  conforms: false
+  evidence: No agent card at /.well-known/agent-card.json or /.well-known/agent.json on any of the
+    five Owler hosts.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    No trust center, security page or certification list is published on any Owler host —
+    corp.owler.com/security and /trust both 404, and trust.owler.com and security.owler.com do not
+    resolve. Owler's parent Meltwater maintains its own corporate compliance material, but that is
+    Meltwater's assertion about Meltwater and is deliberately NOT recorded as an Owler artifact.
+    No `Compliance` pointer is emitted.
+gaps_to_raise_with_provider:
+- Publish the rate limit (value, window, scope) and emit a standard rate-limit header family.
+- Give the 4xx/5xx responses a body schema, ideally application/problem+json with stable error
+  codes.
+- Reconcile the pagination_id first-page sentinel between the competitor ("*") and feed (blank)
+  operations, and document page termination.
+- Use 401 for missing/invalid credentials and reserve 403 for entitlement failures, so a client can
+  tell a bad key from an unlicensed product.
+- Publish a deprecation policy — a whole API generation (api.owler.com v1, including company
+  search) has already been retired without notice.
+- Serve /.well-known/security.txt.

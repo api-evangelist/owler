@@ -1,0 +1,55 @@
+generated: '2026-08-14'
+method: searched
+source: https://developers.owler.com/
+checked: '2026-08-14'
+summary: >-
+  Owler publishes NO sandbox. There is no test mode, no test-vs-live key separation, no key prefix
+  convention, no test fixtures, no seeded demo company and no simulation tooling anywhere in the
+  contract or on the developer portal. What Owler does ship is an interactive CONSOLE: the Swagger
+  UI at developers.owler.com is configured with `tryItOutEnabled: true` and
+  `persistAuthorization: true`, so a holder of a real key can execute all six operations from the
+  browser against PRODUCTION. That is a console, not a sandbox — every call it makes is a live,
+  billable, rate-limited request with real data.
+sandbox_present: false
+console_present: true
+console:
+  url: https://developers.owler.com/
+  type: Swagger UI (OpenAPI 3.0.1 rendered from https://developers-v3.owler.com/apis/api3-swagger.json)
+  try_it_out: true
+  persist_authorization: true
+  target: production (https://apiv2.owler.com)
+  credential_required: true
+  credential_note: >-
+    The console cannot be exercised without a real x-api-key. There is no anonymous or demo mode, so
+    an evaluator cannot see a single response body before signing a data-licensing contract.
+  evidence:
+  - {url: 'https://developers.owler.com/index.html', status: 200, finding: 'SwaggerUIBundle
+      configured with tryItOutEnabled: true and persistAuthorization: true'}
+test_mode:
+  present: false
+  key_prefixes: null
+  note: >-
+    One credential type only — a single x-api-key with no documented test/live variants, no prefix
+    convention and no environment separation. There is no second base URL; https://apiv2.owler.com
+    is the only server in the spec.
+test_data:
+  fixtures: []
+  magic_identifiers: []
+  note: >-
+    No test companies, magic domains or reserved ids are published. The OpenAPI does carry one
+    illustrative value — companyId `100486` appears in the parameter description "Owler Id (e.g.
+    100486)" — but that is a documentation example of a REAL Owler id, not a reserved test fixture,
+    and it is recorded here as such rather than presented as test data.
+time_simulation:
+  present: false
+triggers_and_simulation:
+  present: false
+  note: >-
+    Nothing to simulate — the API is read-only with no events, no webhooks and no state a caller can
+    mutate.
+implications:
+- An integrator cannot write tests against a sandbox; they must mock the six responses locally from
+  the schemas in openapi/ or spend live quota.
+- Because there is no test key, every CI run that touches Owler consumes production rate allowance
+  against an undocumented limit.
+- Evaluation before purchase is impossible through the API — the console is real but locked.

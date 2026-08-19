@@ -1,0 +1,84 @@
+generated: '2026-08-14'
+method: searched
+source: openapi/owler-enterprise-api-openapi.yml
+docs: https://developers.owler.com/
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  oauth2_flows: []
+  scopes: 0
+  credential_count: 1
+schemes:
+- name: api_key
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  sources:
+  - openapi/owler-enterprise-api-openapi.yml
+  applied_to: all 6 operations
+  application_style: >-
+    Per-operation. Each operation carries `security: [{api_key: []}]`; the document declares no
+    top-level `security` block, so there is no default and no anonymous operation.
+model:
+  single_credential: true
+  scopes: false
+  oauth: false
+  oidc: false
+  mtls: false
+  signing: false
+  rotation_documented: false
+  expiry_documented: false
+  note: >-
+    One long-lived static key in one header. Nothing narrows it: no scopes, no per-product token,
+    no read/write distinction (there is no write path), no expiry, no documented rotation
+    procedure, and no way for a caller to introspect what its own key is entitled to.
+provisioning:
+  self_serve: false
+  url: https://corp.owler.com/data-licensing
+  process: >-
+    Keys are issued by an Owler representative as part of a data-licensing agreement. There is no
+    signup form, no developer dashboard and no key-management UI on developers.owler.com — the
+    portal is a bare Swagger UI with an Authorize box and nothing behind it. Third-party
+    integration guides for Owler (for example Domo's connector documentation) likewise instruct
+    users to obtain the key from their Owler representative.
+  test_credentials: none
+failure_semantics:
+  status: 403
+  description: Authentication Failed
+  has_401: false
+  note: >-
+    Owler declares NO 401 anywhere in the contract. A missing key, a malformed key, a revoked key
+    and a valid key that is not licensed for the product being called all return the same 403 with
+    no documented body. Because Company Premium, Competitor Premium and Feed are separately
+    licensed, this collapses two operationally different conditions — "fix your credential" and
+    "buy this product" — into one indistinguishable response.
+  challenge_header: none documented
+transport_security:
+  https_only: true
+  base_url: https://apiv2.owler.com
+  tls_version_observed: TLSv1.3
+  hsts_observed: false
+  hsts_note: >-
+    apiv2.owler.com returned no Strict-Transport-Security header on probe (2026-08-14). The key
+    travels in a plaintext request header, so HSTS on the API host would be a cheap hardening win.
+  edge: AWS API Gateway (unmatched routes return 403 "Missing Authentication Token")
+  see: security/owler-domain-security.yml
+discovery:
+  oauth_authorization_server: not served (probed on all Owler hosts, no document)
+  openid_configuration: not served (probed on all Owler hosts, no document)
+  see: well-known/owler-well-known.yml
+client_guidance:
+- Send `x-api-key` on every request; there is no operation that works without it.
+- Treat 403 as terminal, never retryable. Do not loop on it — you cannot tell a bad key from an
+  unlicensed product, and retrying fixes neither.
+- Store the key as a secret with no assumed expiry, and arrange rotation with the Owler account
+  team out of band, because no rotation endpoint or policy exists.
+- Do not expect a scope or entitlement claim to inspect; if you need to know what a key covers, the
+  only reliable method is to call one operation per product and observe which return 403.
+scopes_artifact: null
+scopes_note: >-
+  No scopes/ artifact was written. derive-oauth-scopes.py found zero oauth2 schemes and zero scopes
+  across the repo's specs — Owler is a key-auth provider with no scope surface, so an empty scopes
+  file would be noise rather than data.

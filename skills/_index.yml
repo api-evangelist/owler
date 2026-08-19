@@ -1,0 +1,29 @@
+generated: '2026-08-14'
+method: generated
+source: openapi/_original/owler-enterprise-api-openapi.json
+note: >-
+  Owler publishes no AGENTS.md, skill files or agent operating guidance of its own — the developer
+  portal is a bare Swagger UI with no prose around it. These three skills are generated from the
+  published OpenAPI 3.0.1 plus the conventions, errors, rate-limits and data-model artifacts in
+  this repo. Every operationId referenced below exists verbatim in the spec. There is one skill per
+  product in the contract (Company Premium, Competitor Premium, Feed), which is also how Owler
+  licenses the data.
+skills:
+- file: owler-enrich-company-from-domain.md
+  name: Enrich a company from its domain with Owler
+  api: openapi/owler-enterprise-api-openapi.yml
+  operations: [getCompanyByWebsite, getCompanyById]
+  product: Company Premium API
+- file: owler-map-competitive-landscape.md
+  name: Map a company's competitive landscape with Owler
+  api: openapi/owler-enterprise-api-openapi.yml
+  operations: [getCompetitorsForWebsite, getCompetitorsForId, getCompanyById]
+  product: Competitor Premium API
+- file: owler-monitor-company-news.md
+  name: Monitor company news and funding events with Owler
+  api: openapi/owler-enterprise-api-openapi.yml
+  operations: [getFeeds, getFeedsByWebsite]
+  product: Feed API
+coverage:
+  operations_in_spec: 6
+  operations_covered: 6

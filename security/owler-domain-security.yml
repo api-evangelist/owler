@@ -1,4 +1,4 @@
-generated: '2026-07-20'
+generated: '2026-08-14'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
@@ -8,6 +8,16 @@ hosts:
   cert_expires: Oct 15 05:27:50 2026 GMT
   hsts: true
   hsts_max_age: 15552000
+- host: developers.owler.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 14 23:59:59 2026 GMT
+  hsts: false
+- host: apiv2.owler.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 14 23:59:59 2026 GMT
+  hsts: null
 domains:
 - domain: owler.com
   dnssec: false

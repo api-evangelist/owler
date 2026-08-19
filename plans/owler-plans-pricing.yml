@@ -1,0 +1,63 @@
+generated: '2026-08-14'
+method: searched
+source: https://corp.owler.com/data-licensing
+checked: '2026-08-14'
+summary: >-
+  Owler publishes NO price for API access. The Owler Enterprise API is sold through the
+  data-licensing motion: corp.owler.com/data-licensing is a lead form whose only product choice is
+  "Owler Enterprise" or "API", with no tier names, no rate card, no per-call or per-record pricing,
+  no free tier and no trial. There is no self-serve signup path to an API key anywhere — the key is
+  issued by an Owler representative after a contract. Owler's SEAT products (Community, Pro, Max)
+  are priced on the www.owler.com checkout flow and are a different product line that carries no
+  API entitlement; that flow could not be read by this pipeline because every www.owler.com URL
+  returns 403 to a non-browser client behind Akamai, so no seat price is asserted here.
+plan_count: 0
+prices_published: false
+currency: null
+billing_period: null
+public_signup: false
+free_tier: false
+trial: false
+api_plans: []
+api_access:
+  model: contact-sales / negotiated data license
+  request_url: https://corp.owler.com/data-licensing
+  form_options: [Owler Enterprise, API]
+  key_issuance: >-
+    Through an Owler representative. Third-party integration documentation for Owler (for example
+    Domo's connector guide) instructs users to obtain the API key by contacting their Owler
+    representative, which corroborates that no self-serve key exists.
+  metering_unit: not published
+  overage: not published
+  minimum_commit: not published
+licensed_products:
+- name: Competitive Relationship Graph
+  description: Owler's crowdsourced competitor graph — the surface behind the Competitor Premium
+    API operations.
+  price: null
+- name: Dynamic Firmographics
+  description: Real-time company attributes — the surface behind the Company Premium API
+    operations.
+  price: null
+- name: Content Monitoring
+  description: Real-time news and business events — the surface behind the Feed API operations.
+  price: null
+entitlement_note: >-
+  The three licensed products map one-to-one onto the three tags in the OpenAPI (Company Premium
+  API, Competitor Premium API, Feed API), which is why a key can be valid and still return 403 on
+  a product it is not licensed for. Owler does not document which products a given license
+  includes, and the API returns no entitlement introspection endpoint.
+seat_products_note: >-
+  Owler Community (free), Owler Pro and Owler Max are the human seat tiers, marketed at
+  corp.owler.com/owler-community and corp.owler.com/owler-pro with the price shown only inside the
+  www.owler.com/checkout flow. They are recorded here as context, NOT as API plans — none of them
+  grants API access, and no price is quoted because the checkout host returned 403 to every probe.
+evidence:
+- {url: 'https://corp.owler.com/data-licensing', status: 200, finding: 'contact-sales form with an
+    "Owler Enterprise / API" solution selector; no prices, no tiers, no quotas'}
+- {url: 'https://corp.owler.com/owler-api-for-ai-guide', status: 200, finding: 'API marketing page;
+    links to /data-licensing as the product page, publishes no pricing'}
+- {url: 'https://corp.owler.com/owler-pro', status: 200, finding: '"See All Plans" CTA links out to
+    the www.owler.com checkout; no price on the page itself'}
+- {url: 'https://www.owler.com/checkout/owlerpro', status: 403, finding: 'Akamai returns 403 to
+    non-browser clients — the seat rate card could not be read, so no seat price is recorded'}

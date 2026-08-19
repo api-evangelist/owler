@@ -1,0 +1,98 @@
+generated: '2026-08-14'
+method: searched
+source: https://developers.owler.com/
+summary: >-
+  Owler publishes a live status page and a versioned API path, and nothing else of the lifecycle
+  contract. There is no changelog, no deprecation policy, no Sunset/Deprecation header support, no
+  SLA and no migration guide anywhere on the developer portal or corp.owler.com. The clearest
+  lifecycle fact available is a retirement that was never announced: the previous generation of
+  the API is gone from the internet with no notice page (see retired_surfaces below).
+
+versioning:
+  scheme: uri-path
+  current: v1
+  document_version: v3.0
+  docs: https://developers.owler.com/
+  note: >-
+    The URI version and the product generation are different numbers. Every path is /v1/..., while
+    info.version in the published OpenAPI reads "v3.0" and the portal is branded "Owler Enterprise
+    API" (v3). Clients pin /v1/; the v3 label describes the document/product generation, not the
+    route.
+  policy_url: null
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: unknown
+  deprecation_header: unknown
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy is published, and no operation in the OpenAPI carries `deprecated: true`.
+    No Deprecation pointer is wired into apis.yml — there is nothing to point at. This is not a
+    neutral gap: Owler has already retired an entire API generation (below) without a public notice,
+    so a consumer has no contractual warning of the next one.
+
+retired_surfaces:
+- generation: v1 (legacy "Owler API")
+  host: api.owler.com
+  spec_format: Swagger 1.2, converted and mirrored to Swagger 2.0 by APIs.guru
+  mirror: https://api.apis.guru/v2/specs/owler.com/1.0.0/swagger.json
+  original_spec_url: https://developers.owler.com/swagger/spec.json
+  operations: 13
+  auth: apiKey in header, parameter name `user_key`
+  surface: >-
+    /v1/company/basicsearch, /v1/company/search, /v1/company/fuzzysearch, /v1/company/id/{id},
+    /v1/company/url/{website}, /v1/company/competitor/*, /v1/companypremium/*, /v1/feed*
+  status: dead
+  evidence:
+  - {check: DNS, result: api.owler.com resolves (Akamai, www.owler.com-v1.edgekey.net), date: '2026-08-14'}
+  - {check: TLS, result: 'handshake fails — tlsv1 alert internal error; no certificate is served for
+      this hostname', date: '2026-08-14'}
+  - {check: original spec URL, result: 403 AccessDenied (S3), url: https://developers.owler.com/swagger/spec.json,
+      date: '2026-08-14'}
+  note: >-
+    THREE capabilities present in v1 are absent from the current v3 contract and were removed
+    without any published notice: company SEARCH (basicsearch / search / fuzzysearch by name,
+    ticker, PermID, address or phone), the non-premium company and competitor endpoints, and the
+    `user_key` auth parameter (now `x-api-key`). An integration built on the v1 search endpoints
+    has no v3 equivalent — the current API can only look a company up by a domain or an Owler id
+    the caller already holds. Anyone still linking apis.guru's owler.com entry is pointing at a
+    host that no longer completes a TLS handshake.
+
+status_page:
+  url: https://status.owler.com/
+  verified: '2026-08-14'
+  http_status: 200
+  title: Owler Monitor
+  features: [90-day uptime history, overall uptime for 24h/7d/30d/90d, status update history,
+    email subscription]
+  note: >-
+    Public, unauthenticated and live. Individual monitor names render client-side and could not be
+    enumerated by this pipeline, so no per-component list is asserted. There were no status updates
+    in the trailing 7 days at the time of the probe.
+  incident_history_api: null
+
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No SLA or uptime commitment is published. Terms are at https://corp.owler.com/terms-conditions;
+    any API availability commitment would sit inside a negotiated data-licensing agreement, not on
+    a public page.
+
+changelog:
+  url: null
+  published: false
+  note: >-
+    No dated API changelog exists. https://corp.owler.com/changelog returns 404 and the developer
+    portal is a bare Swagger UI with no release-notes surface. Product announcements appear only as
+    marketing posts on https://corp.owler.com/blog, undated as release notes.
+  see: changelog/owler-changelog.yml
+
+support:
+  channel: https://owlerinc.happyfox.com/home/
+  knowledge_base: https://owlerinc.happyfox.com/kb/
+  developer_contact: >-
+    The OpenAPI's info.contact names "Owler Support" and points at the HappyFox help desk — there
+    is no dedicated developer or API support channel.

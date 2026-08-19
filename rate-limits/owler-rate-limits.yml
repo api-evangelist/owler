@@ -1,0 +1,78 @@
+generated: '2026-08-14'
+method: searched
+source: https://developers.owler.com/
+corroboration: openapi/_original/owler-enterprise-api-openapi.json
+checked: '2026-08-14'
+summary: >-
+  Owler enforces a rate limit and documents nothing about it. All six operations declare a 429 Too
+  Many Requests response in the published OpenAPI, which is positive evidence that a limit exists
+  and is returned to callers — but no number, no window, no scope, no header family and no
+  Retry-After behavior is published on developers.owler.com, corp.owler.com, or anywhere else this
+  pipeline could reach. The developer portal is a bare Swagger UI with no prose pages around it, so
+  there is no rate-limit section to read. Any actual allowance is set per contract in the
+  data-licensing agreement.
+limit_count: 0
+limit_count_note: >-
+  Zero PUBLISHED limits, not zero limits. This is an honest zero: the 429 proves enforcement, the
+  absence of documentation is the finding.
+headers_documented: false
+headers: []
+headers_note: >-
+  No X-RateLimit-*, RateLimit-* (RFC 9331 draft) or Retry-After header is documented, and none
+  could be observed live — every unauthenticated request to https://apiv2.owler.com returns 403
+  from AWS API Gateway before any rate-limit header would be attached. Header names must NOT be
+  guessed from the fact that the API is fronted by API Gateway: an AWS usage plan returns a bare
+  429 with no rate headers by default, so a client cannot assume the standard family is present.
+status_on_exhaustion: 429
+retry_after: null
+scopes:
+- scope: per-key
+  surface: REST (https://apiv2.owler.com)
+  window: null
+  limit: null
+  unit: null
+  burst: null
+  status_on_exhaustion: 429
+  headers: []
+  retry_after: null
+  evidence: >-
+    429 "Too Many Requests" is declared on all six operations in the published OpenAPI 3.0.1
+    (getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId,
+    getFeedsByWebsite, getFeeds).
+  note: >-
+    Scope is inferred as per-key only because x-api-key is the sole credential in the contract;
+    Owler does not state whether the counter is per key, per account or per endpoint.
+structural_limits:
+- limit: 10 identifiers per Feed request
+  parameter: company_id (getFeeds) / domain (getFeedsByWebsite)
+  source: OpenAPI parameter description "Maximum of 10 Company Ids" / "Maximum of 10 Company
+    Websites"
+  note: A hard request-shaping limit, published and enforceable client-side. Not a rate limit, but
+    it is the ceiling that determines how many calls a bulk job costs.
+- limit: 100 results per Feed page
+  parameter: limit
+  default: 10
+  source: OpenAPI parameter description "Number of results to be displayed - 10 (by default, if not
+    specified) to 100"
+- limit: 1 company per request
+  applies_to: [getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId]
+  source: path shape — no batch parameter exists on the Company Premium or Competitor Premium
+    operations
+  note: >-
+    The practical throughput constraint. Enriching N companies is N requests against an
+    undocumented allowance, which makes the missing limit number the single most consequential
+    documentation gap for anyone sizing a bulk enrichment job.
+client_guidance: >-
+  Treat the limit as unknown and adaptive: exponential backoff with jitter on 429, a conservative
+  self-imposed concurrency ceiling, and a persisted cursor so a batch can resume. Do not build a
+  fixed-rate scheduler against an unpublished allowance, and confirm the contracted number with the
+  Owler account team before sizing any bulk job.
+evidence:
+- {url: 'https://developers-v3.owler.com/apis/api3-swagger.json', status: 200, finding: '429
+    declared on 6/6 operations; no rate-limit headers, no Retry-After, no limit values in the
+    document'}
+- {url: 'https://apiv2.owler.com/v1/companypremium/url/apievangelist.com', status: 403, finding: 'AWS
+    API Gateway rejects unauthenticated requests before any rate-limit header is emitted, so live
+    observation of the header family was not possible'}
+- {url: 'https://developers.owler.com/', status: 200, finding: 'Swagger UI shell only — no prose
+    documentation pages exist on the portal to carry a rate-limit policy'}

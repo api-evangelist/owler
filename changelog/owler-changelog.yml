@@ -1,0 +1,70 @@
+generated: '2026-08-14'
+method: searched
+source: https://developers.owler.com/
+checked: '2026-08-14'
+summary: >-
+  Owler publishes NO API changelog. There is no release-notes page, no dated entries, no RSS feed
+  and no version history anywhere on the developer portal or corp.owler.com. The portal is a bare
+  Swagger UI with no surrounding pages, corp.owler.com/changelog returns 404, and the corp sitemap
+  contains no releases, changelog or what's-new page. No `ChangeLog` pointer is wired into apis.yml
+  because there is nothing to point at. The entries below are NOT a changelog — they are the only
+  dated, verifiable version facts this pipeline could establish, recorded so the v1 -> v3 gap is at
+  least documented somewhere.
+published: false
+url: null
+feed: null
+scheme: uri-path (/v1/) with a separately numbered document/product version (v3.0)
+current_version: v3.0 (document) / v1 (URI path)
+entries: []
+version_facts:
+- generation: v3
+  label: Owler Enterprise API
+  document_version: v3.0
+  date: unknown
+  spec: https://developers-v3.owler.com/apis/api3-swagger.json
+  format: OpenAPI 3.0.1
+  operations: 6
+  auth: x-api-key header
+  host: https://apiv2.owler.com
+  observed: '2026-08-14'
+  note: >-
+    Current. No release date is published anywhere — the OpenAPI carries no date field and the
+    portal shows none, so the age of this contract is undiscoverable from the provider's own
+    surface.
+- generation: v1
+  label: Owler API
+  document_version: 1.0.0
+  date: unknown
+  spec: https://developers.owler.com/swagger/spec.json (403 AccessDenied as of 2026-08-14)
+  mirror: https://api.apis.guru/v2/specs/owler.com/1.0.0/swagger.json
+  format: Swagger 1.2 (mirrored as Swagger 2.0 by APIs.guru)
+  operations: 13
+  auth: user_key header
+  host: https://api.owler.com (no longer completes a TLS handshake)
+  status: retired without notice
+  removed_capabilities:
+  - Company search — basicCompanySearch, searchCompany and fuzzyCompanySearch let a caller find a
+    company by name, ticker, PermID, address or phone. NOTHING in v3 replaces this; v3 can only
+    look up a company by a domain or an Owler id the caller already holds.
+  - Non-premium company and competitor endpoints (/v1/company/id, /v1/company/url,
+    /v1/company/competitor/*).
+  - The `user_key` authentication parameter, replaced by `x-api-key`.
+  note: >-
+    The single most consequential API change in Owler's history is undocumented. A consumer
+    migrating from v1 gets no notice, no mapping table and no sunset date — the host simply stopped
+    serving TLS.
+evidence:
+- {url: 'https://corp.owler.com/changelog', status: 404}
+- {url: 'https://corp.owler.com/sitemap.xml', status: 200, finding: 'no changelog, release-notes or
+    what''s-new page among the non-blog pages'}
+- {url: 'https://developers.owler.com/index.html', status: 200, finding: 'Swagger UI shell only; no
+    release-notes surface'}
+- {url: 'https://developers.owler.com/swagger/spec.json', status: 403, finding: 'the v1 spec URL
+    named in the APIs.guru x-origin block no longer serves'}
+product_announcements:
+  url: https://corp.owler.com/blog
+  note: >-
+    Owler announces product news as marketing blog posts (for example the 2023 ChatGPT plugin
+    launch at https://corp.owler.com/blog/owler-launches-chatgpt-plugin-). These are not release
+    notes: they are undated relative to API versions, cover the seat products rather than the API,
+    and have never carried a breaking-change notice.

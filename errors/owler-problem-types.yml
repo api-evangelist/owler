@@ -1,0 +1,95 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/owler-enterprise-api-openapi.json
+format: undocumented
+rfc9457: false
+summary: >-
+  The Owler Enterprise API declares five error statuses across its six operations and gives each a
+  single-word description with NO response body schema and NO media type. There is no error code
+  registry, no problem+json, no documented field names and no remediation guidance published
+  anywhere on developers.owler.com. What follows is everything the contract actually says — the
+  status codes and their descriptions — plus honest notes on what a client cannot know. Nothing
+  here is invented: no error body example is given because Owler publishes none.
+error_body_shape: unknown
+error_body_note: >-
+  Every 4xx/5xx response object in the OpenAPI is a bare {description} with no `content`, so the
+  bytes a client receives on failure are undefined by the contract. A machine client must treat
+  the status code as the only reliable signal and parse the body defensively.
+coverage:
+  operations: 6
+  statuses_declared: 5
+  operations_declaring_400: 6
+  operations_declaring_403: 6
+  operations_declaring_404: 4
+  operations_declaring_429: 6
+  operations_declaring_500: 6
+problems:
+- status: 400
+  title: Invalid Parameters
+  spec_description: Invalid Parameters
+  applies_to: [getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId,
+    getFeedsByWebsite, getFeeds]
+  likely_causes_from_contract:
+  - A required parameter is missing (website / companyId in the path; domain on getFeedsByWebsite;
+    company_id on getFeeds).
+  - format set to something other than json or xml.
+  - category set to a value outside the enum NEWS, PRESS, FUNDING, ACQUISITION, PEOPLE, BLOG,
+    VIDEOS.
+  - More than 10 comma-separated identifiers passed to a Feed operation.
+  - limit outside the documented 10-100 range.
+  remediation: Validate against the enums and the documented 10-identifier / 100-result ceilings
+    before retrying; a 400 is not retryable unchanged.
+  body_schema: null
+- status: 403
+  title: Authentication Failed
+  spec_description: Authentication Failed
+  applies_to: [getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId,
+    getFeedsByWebsite, getFeeds]
+  note: >-
+    Owler uses 403 where most APIs use 401 — there is no 401 anywhere in the contract. A missing,
+    malformed, expired or entitlement-less x-api-key all surface as the same 403, so a client
+    cannot distinguish "bad key" from "key not licensed for this product" from the status alone.
+    Owler's Company Premium / Competitor Premium products are separately licensed, which makes
+    that ambiguity operationally significant.
+  remediation: Check the x-api-key header is present and correct; if it is, contact the Owler
+    account team to confirm the key is entitled to the product being called. Never retry blind.
+  body_schema: null
+- status: 404
+  title: Resource Not Found
+  spec_description: Resource Not Found
+  applies_to: [getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId]
+  note: >-
+    Declared ONLY on the Company Premium and Competitor Premium lookups. The two Feed operations
+    do not declare 404 — consistent with a batch/search endpoint that returns an empty feed[]
+    array rather than a not-found for an unknown company.
+  remediation: The domain or Owler company id is not in Owler's graph. Re-resolve the domain (try
+    the apex vs www form) or look the company up by the other key.
+  body_schema: null
+- status: 429
+  title: Too Many Requests
+  spec_description: Too Many Requests
+  applies_to: [getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId,
+    getFeedsByWebsite, getFeeds]
+  note: >-
+    Confirms a rate limit is enforced, but no limit value, window, X-RateLimit-* header family or
+    Retry-After is documented. See rate-limits/owler-rate-limits.yml.
+  remediation: Back off exponentially with jitter. There is no published Retry-After to honor, so
+    a client must choose its own backoff floor.
+  body_schema: null
+- status: 500
+  title: Internal Server Error
+  spec_description: Internal Server Error
+  applies_to: [getCompanyByWebsite, getCompanyById, getCompetitorsForWebsite, getCompetitorsForId,
+    getFeedsByWebsite, getFeeds]
+  remediation: Retry with backoff — all six operations are GETs and therefore safe to retry. If it
+    persists, check https://status.owler.com/ and open a ticket at
+    https://owlerinc.happyfox.com/home/.
+  body_schema: null
+gaps:
+- No response body schema on any error status.
+- No application/problem+json (RFC 9457) support.
+- No machine-readable error code or type URI.
+- No 401 — authentication failure is folded into 403.
+- No documented Retry-After on 429.
+- No error reference page on developers.owler.com (the portal is a bare Swagger UI with no prose
+  documentation alongside it).

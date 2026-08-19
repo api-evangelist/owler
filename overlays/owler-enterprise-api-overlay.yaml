@@ -1,0 +1,141 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Owler Enterprise API
+  version: 1.0.0
+extends: openapi/owler-enterprise-api-openapi.yml
+x-generated: '2026-08-14'
+x-method: generated
+x-source: >-
+  Derived from the verbatim spec at openapi/_original/owler-enterprise-api-openapi.json (fetched
+  from https://developers-v3.owler.com/apis/api3-swagger.json on 2026-08-14) plus the artifacts in
+  this repo. Captures API Evangelist's annotations WITHOUT mutating Owler's original document.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/owler
+    x-apievangelist-harvested: '2026-08-14'
+    x-apievangelist-spec-source: https://developers-v3.owler.com/apis/api3-swagger.json
+    x-apievangelist-portal: https://developers.owler.com/
+    x-apievangelist-note: >-
+      Read-only API. Six GET operations, one API-key scheme, no write path, no events. Access is
+      sold through data licensing; there is no self-serve signup.
+- target: $.info
+  update:
+    x-lifecycle:
+      uri_version: v1
+      document_version: v3.0
+      predecessor: >-
+        api.owler.com (13 operations, Swagger 1.2, user_key header) — retired with no published
+        notice; the host no longer completes a TLS handshake. Company SEARCH by name/ticker/PermID
+        existed there and has no v3 equivalent.
+      deprecation_policy: none published
+      status_page: https://status.owler.com/
+- target: $.servers[0]
+  update:
+    description: Production. AWS API Gateway; returns 403 "Missing Authentication Token" on any
+      unmatched route.
+- target: $.components.securitySchemes.api_key
+  update:
+    description: >-
+      Per-account API key issued through the Owler data-licensing sales process — there is no
+      self-serve key generation. Sent on every request as the x-api-key header. A missing, invalid
+      or unentitled key all return 403; the contract declares no 401, so a client cannot
+      distinguish a bad key from a key that is not licensed for the product being called.
+    x-provisioning: https://corp.owler.com/data-licensing
+- target: $.paths[*][*].responses.429
+  update:
+    x-rate-limit-note: >-
+      A limit exists and is enforced, but Owler publishes no limit value, window, scope,
+      X-RateLimit-* header family or Retry-After. Back off exponentially with jitter; see
+      rate-limits/owler-rate-limits.yml.
+- target: $.paths[*][*].responses.403
+  update:
+    x-error-note: >-
+      Used for BOTH authentication failure and product entitlement failure. Owler declares no 401
+      anywhere in this contract. See errors/owler-problem-types.yml.
+- target: $.paths[*][*].responses
+  update:
+    x-error-body-note: >-
+      No 4xx/5xx response in this document declares a content block, so the error body shape is
+      undefined by the contract. There is no RFC 9457 application/problem+json support.
+- target: $.paths['/v1/company/competitorpremium/url/{website}'].get
+  update:
+    x-pagination:
+      style: opaque-cursor
+      parameter: pagination_id
+      first_page_sentinel: '*'
+      response_field: pagination_id
+      x-inconsistency: >-
+        The competitor operations require '*' on the first request while the feed operations
+        require a blank value. One client cannot use one code path for both.
+- target: $.paths['/v1/company/competitorpremium/id/{companyId}'].get
+  update:
+    x-pagination:
+      style: opaque-cursor
+      parameter: pagination_id
+      first_page_sentinel: '*'
+      response_field: pagination_id
+- target: $.paths['/v1/feed'].get
+  update:
+    x-pagination:
+      style: opaque-cursor
+      parameter: pagination_id
+      first_page_sentinel: '' # blank
+      response_field: pagination_id
+    x-batch:
+      parameter: company_id
+      max_identifiers: 10
+      page_size_parameter: limit
+      page_size_default: 10
+      page_size_max: 100
+- target: $.paths['/v1/feed/url'].get
+  update:
+    x-pagination:
+      style: opaque-cursor
+      parameter: pagination_id
+      first_page_sentinel: '' # blank
+      response_field: pagination_id
+    x-batch:
+      parameter: domain
+      max_identifiers: 10
+      page_size_parameter: limit
+      page_size_default: 10
+      page_size_max: 100
+- target: $.paths['/v1/companypremium/url/{website}'].get
+  update:
+    x-batch:
+      supported: false
+      note: One company per request. Enriching N companies costs N calls against an undocumented
+        rate allowance.
+- target: $.paths['/v1/companypremium/id/{companyId}'].get
+  update:
+    x-batch:
+      supported: false
+- target: $.components.schemas.companyPremium.properties.perm_id
+  update:
+    description: >-
+      LSEG/Refinitiv PermID for this company — the one identifier in this contract that joins
+      Owler's graph to external financial reference data.
+- target: $.components.schemas.companyPremium.properties.portfolio_company_ids
+  update:
+    description: >-
+      Owler company ids of this company's portfolio companies (investor edge). Bare ids only — each
+      one requires a separate getCompanyById call to resolve.
+- target: $.components.schemas.CompetitorBasicVO.properties.score
+  update:
+    description: >-
+      Owler's crowdsourced competitive-strength score for this competitor relative to the subject
+      company. This is the field that carries the competitive graph's edge weight and appears
+      nowhere else in the contract.
+- target: $.components.schemas.Investor.properties.company_id
+  update:
+    description: >-
+      Owler company id — typed as a string here but as an integer on companyPremium,
+      CompanyBasicVO and CompetitorBasicVO. Clients must coerce.
+- target: $.components.schemas
+  update:
+    x-schema-quality-note: >-
+      No schema in this document declares `required`, a string `format`, a description or an
+      example. Dates (founded_date, feed_date, Funding.date, Acquisition.date) and money/quantity
+      values (revenue, employee_count, Funding.amount, Acquisition.amount) are bare strings with no
+      documented format, so their parsing rules cannot be derived from the contract.

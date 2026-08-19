@@ -1,0 +1,100 @@
+generated: '2026-08-14'
+method: probed
+source: live HTTPS probes of every Owler host in apis.yml and the OpenAPI servers[] block
+summary: >-
+  Owler serves NO /.well-known/ discovery surface. Every RFC 8615 path was probed on all five
+  Owler hosts on 2026-08-14 and not one returned a document. There is no security.txt, no OIDC
+  or OAuth discovery (consistent with the API being api-key authenticated, not OAuth), no
+  api-catalog, no ai-plugin.json and no A2A agent card. Three distinct negative shapes were
+  observed and are recorded separately below because they mean different things: corp.owler.com
+  (Squarespace) answers a clean 404; apiv2.owler.com is an AWS API Gateway that answers 403
+  "Missing Authentication Token" to every unmatched route, so a 403 there is a route miss, not a
+  gated document; developers.owler.com / developers-v3.owler.com are static S3 website buckets
+  that answer 403 AccessDenied for any key that does not exist; www.owler.com sits behind Akamai
+  and answered 403 to every request from this pipeline, including its own homepage, so its
+  well-known surface is UNDETERMINED rather than proven absent.
+documents_found: 0
+pointer_emitted: false
+pointer_note: >-
+  No WellKnown or SecurityTxt pointer is wired into apis.yml. Nothing returned a 200 carrying a
+  real document, and a pointer would assert that Owler serves a discovery surface it does not.
+hosts:
+- host: apiv2.owler.com
+  role: API host (OpenAPI servers[0])
+  edge: AWS API Gateway
+  negative_shape: 403 {"message":"Missing Authentication Token"} on every unmatched route
+  documents:
+  - {path: /.well-known/security.txt, status: 403, file: null}
+  - {path: /.well-known/openid-configuration, status: 403, file: null}
+  - {path: /.well-known/oauth-authorization-server, status: 403, file: null}
+  - {path: /.well-known/oauth-protected-resource, status: 403, file: null}
+  - {path: /.well-known/api-catalog, status: 403, file: null}
+  - {path: /.well-known/ai-plugin.json, status: 403, file: null}
+  - {path: /.well-known/agent-card.json, status: 403, file: null}
+  - {path: /.well-known/agent.json, status: 403, file: null}
+  - {path: /llms.txt, status: 403, file: null}
+- host: developers.owler.com
+  role: developer portal (Swagger UI on S3)
+  edge: Amazon S3 static website
+  negative_shape: 403 AccessDenied (S3 XML error) for any nonexistent key
+  documents:
+  - {path: /.well-known/security.txt, status: 403, file: null}
+  - {path: /.well-known/openid-configuration, status: 403, file: null}
+  - {path: /.well-known/oauth-authorization-server, status: 403, file: null}
+  - {path: /.well-known/oauth-protected-resource, status: 403, file: null}
+  - {path: /.well-known/api-catalog, status: 403, file: null}
+  - {path: /.well-known/ai-plugin.json, status: 403, file: null}
+  - {path: /.well-known/agent-card.json, status: 403, file: null}
+  - {path: /.well-known/agent.json, status: 403, file: null}
+  - {path: /llms.txt, status: 403, file: null}
+- host: developers-v3.owler.com
+  role: spec host (serves /apis/api3-swagger.json)
+  edge: Amazon S3 static website
+  negative_shape: 403 AccessDenied (S3 XML error) for any nonexistent key
+  documents:
+  - {path: /.well-known/security.txt, status: 403, file: null}
+  - {path: /.well-known/openid-configuration, status: 403, file: null}
+  - {path: /.well-known/oauth-authorization-server, status: 403, file: null}
+  - {path: /.well-known/oauth-protected-resource, status: 403, file: null}
+  - {path: /.well-known/api-catalog, status: 403, file: null}
+  - {path: /.well-known/ai-plugin.json, status: 403, file: null}
+  - {path: /.well-known/agent-card.json, status: 403, file: null}
+  - {path: /.well-known/agent.json, status: 403, file: null}
+  - {path: /llms.txt, status: 403, file: null}
+- host: corp.owler.com
+  role: corporate website (apis.yml Website)
+  edge: Squarespace
+  negative_shape: clean 404 with the site's HTML 404 page
+  documents:
+  - {path: /.well-known/security.txt, status: 404, file: null}
+  - {path: /.well-known/openid-configuration, status: 404, file: null}
+  - {path: /.well-known/oauth-authorization-server, status: 404, file: null}
+  - {path: /.well-known/oauth-protected-resource, status: 404, file: null}
+  - {path: /.well-known/api-catalog, status: 404, file: null}
+  - {path: /.well-known/ai-plugin.json, status: 404, file: null}
+  - {path: /.well-known/agent-card.json, status: 404, file: null}
+  - {path: /.well-known/agent.json, status: 404, file: null}
+  - {path: /llms.txt, status: 404, file: null}
+- host: www.owler.com
+  role: product application
+  edge: Akamai
+  negative_shape: >-
+    403 to every request from this pipeline including GET / — a bot challenge, not a path result.
+    Treat these rows as UNDETERMINED, not as proof of absence.
+  documents:
+  - {path: /.well-known/security.txt, status: 403, file: null}
+  - {path: /.well-known/openid-configuration, status: 403, file: null}
+  - {path: /.well-known/oauth-authorization-server, status: 403, file: null}
+  - {path: /.well-known/oauth-protected-resource, status: 403, file: null}
+  - {path: /.well-known/api-catalog, status: 403, file: null}
+  - {path: /.well-known/ai-plugin.json, status: 403, file: null}
+  - {path: /.well-known/agent-card.json, status: 403, file: null}
+  - {path: /.well-known/agent.json, status: 403, file: null}
+  - {path: /llms.txt, status: 403, file: null}
+agent_card:
+  found: false
+  note: >-
+    Both /.well-known/agent-card.json and the legacy /.well-known/agent.json were probed on all
+    five hosts and neither returned a JSON AgentCard on any of them. Per the pipeline contract no
+    a2a/ artifact was written and no AgentCard pointer was emitted — an agent card is the one
+    artifact that must never be authored on a provider's behalf.

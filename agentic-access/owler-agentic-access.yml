@@ -1,0 +1,74 @@
+generated: '2026-08-14'
+method: generated
+source: openapi/owler-enterprise-api-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 6
+  by_action_class:
+    connected: 6
+  by_consequence:
+    read: 6
+  human_in_the_loop_required: 0
+operations:
+- path: /v1/companypremium/url/{website}
+  method: get
+  operationId: getCompanyByWebsite
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/companypremium/id/{companyId}
+  method: get
+  operationId: getCompanyById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/company/competitorpremium/url/{website}
+  method: get
+  operationId: getCompetitorsForWebsite
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/company/competitorpremium/id/{companyId}
+  method: get
+  operationId: getCompetitorsForId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/feed/url
+  method: get
+  operationId: getFeedsByWebsite
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/feed
+  method: get
+  operationId: getFeeds
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

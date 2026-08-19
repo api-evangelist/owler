@@ -1,0 +1,135 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/owler-enterprise-api-openapi.json
+summary: >-
+  Derived from the 12 schemas in components.schemas and the $ref graph between them. The model has
+  one hub — the company — reachable by two interchangeable keys (an Owler `company_id` integer and
+  a `website` domain) and projected in three different shapes depending on which product returned
+  it: companyPremium (the full 26-field record), CompanyBasicVO (the 7-field stub embedded in feed
+  items) and CompetitorBasicVO (the same stub plus a competitive `score`). Every other entity hangs
+  off the company: funding rounds, acquisitions, the CEO, the HQ address, the stock listing,
+  investors, and news feed items.
+entities:
+- name: companyPremium
+  role: 'root aggregate — the full company record'
+  returned_by: [getCompanyByWebsite, getCompanyById]
+  identifier: 'company_id (integer)'
+  alternate_identifiers: [website, perm_id, alternative_websites]
+  field_count: 26
+  scalar_fields: [company_id, name, short_name, description, website, profile_url, logo_url,
+    owler_generated_logo, company_type, employee_count, revenue, founded_date, perm_id,
+    facebook_link, linkedin_link, twitter_link, youtube_link]
+  array_fields: [industries, sic_code, portfolio_company_ids, alternative_websites]
+  note: >-
+    perm_id is a Refinitiv/LSEG PermID, which makes this record joinable to external financial
+    reference data. portfolio_company_ids is a self-referencing array of company_ids — the
+    investor-to-portfolio edge, expressed as bare ids with no embedded objects.
+- name: CompanyBasicVO
+  role: company stub
+  returned_by: embedded on every FeedsVO item
+  identifier: 'company_id (integer)'
+  field_count: 7
+  fields: [company_id, name, short_name, website, profile_url, logo_url, owler_generated_logo]
+- name: CompetitorBasicVO
+  role: company stub plus competitive strength
+  returned_by: [getCompetitorsForWebsite, getCompetitorsForId]
+  identifier: 'company_id (integer)'
+  field_count: 7
+  fields: [company_id, name, short_name, website, profile_url, logo_url, score]
+  note: >-
+    `score` (integer) is the crowdsourced competitive-strength signal and is the ONLY field in the
+    whole model that does not also exist on the basic company stub. It is the product Owler
+    actually sells — the competitive graph edge weight — and it exists nowhere else in the
+    contract.
+- name: Ceo
+  role: person
+  embedded_on: companyPremium.ceo
+  fields: [first_name, last_name, image_url]
+  note: The only person entity in the model. There is no contacts or people API in this contract.
+- name: Address
+  role: value object
+  embedded_on: companyPremium.hq_address
+  fields: [street1, street2, city, state, postal_code, country, phone]
+- name: Stock
+  role: value object
+  embedded_on: companyPremium.stock
+  fields: [exchange, ticker]
+  note: Present only for publicly traded companies; the discriminator is company_type.
+- name: Funding
+  role: event
+  embedded_on: companyPremium.funding[]
+  fields: [date, type, amount, undisclosed, 'investor[]']
+- name: Investor
+  role: company reference
+  embedded_on: Funding.investor[]
+  fields: [company_id, name, website]
+  note: >-
+    company_id is typed as a STRING here and as an INTEGER on every other company-bearing schema.
+    A client deserializing the funding graph must coerce.
+- name: Acquisition
+  role: event
+  embedded_on: companyPremium.acquisition[]
+  fields: [company_id, acquirer_company_id, name, website, date, amount, status, undisclosed]
+  note: Carries both sides of the edge as ids, so the acquisition graph can be walked without a
+    second lookup.
+- name: FeedsVO
+  role: news/event item
+  returned_by: [getFeeds, getFeedsByWebsite]
+  identifier: 'id (string)'
+  fields: [id, title, description, category, feed_date, source_url, owler_feed_url,
+    enclosure_image, publisher_name, publisher_logo, company]
+  categories: [NEWS, PRESS, FUNDING, ACQUISITION, PEOPLE, BLOG, VIDEOS]
+- name: feedresults
+  role: response envelope
+  fields: ['feed[] -> FeedsVO', pagination_id]
+- name: competitors
+  role: response envelope
+  fields: ['competitor[] -> CompetitorBasicVO', pagination_id]
+relationships:
+- {from: companyPremium, to: Ceo, type: has_one, via: ceo}
+- {from: companyPremium, to: Address, type: has_one, via: hq_address}
+- {from: companyPremium, to: Stock, type: has_one, via: stock}
+- {from: companyPremium, to: Funding, type: has_many, via: funding}
+- {from: companyPremium, to: Acquisition, type: has_many, via: acquisition}
+- {from: companyPremium, to: companyPremium, type: has_many, via: portfolio_company_ids,
+    binding: id-reference, note: 'investor -> portfolio companies; ids only, requires a second
+      lookup per company'}
+- {from: Funding, to: Investor, type: has_many, via: investor}
+- {from: Investor, to: companyPremium, type: belongs_to, via: company_id, binding: id-reference,
+    note: 'string-typed here, integer elsewhere'}
+- {from: Acquisition, to: companyPremium, type: belongs_to, via: company_id, binding: id-reference}
+- {from: Acquisition, to: companyPremium, type: belongs_to, via: acquirer_company_id,
+    binding: id-reference}
+- {from: competitors, to: CompetitorBasicVO, type: has_many, via: competitor}
+- {from: CompetitorBasicVO, to: companyPremium, type: belongs_to, via: company_id,
+    binding: id-reference, note: 'the competitive-graph edge; walk it with getCompanyById'}
+- {from: feedresults, to: FeedsVO, type: has_many, via: feed}
+- {from: FeedsVO, to: CompanyBasicVO, type: has_one, via: company, binding: embedded}
+identifiers:
+- name: company_id
+  type: integer on companyPremium / CompanyBasicVO / CompetitorBasicVO; string on Investor,
+    Acquisition and every request parameter
+  prefix: 'none (bare numeric, e.g. 100486 per the OpenAPI parameter example)'
+  note: Owler's own primary key; stable across all three products.
+- name: website
+  type: string (domain)
+  note: The natural key for a caller who does not yet hold an Owler id. Every product accepts it.
+- name: perm_id
+  type: string
+  note: External LSEG/Refinitiv PermID carried on companyPremium — the model's one join to
+    third-party reference data.
+- name: 'id (FeedsVO)'
+  type: string
+  note: News item identifier, opaque.
+schema_quality:
+  required_arrays: 0
+  formats_declared: 0
+  examples_declared: 0
+  descriptions_on_schemas: 0
+  note: >-
+    None of the 12 schemas declares `required`, a string `format` (dates, URLs and emails are all
+    bare strings), a field description or an example. Dates (founded_date, feed_date, Funding.date,
+    Acquisition.date) and money values (revenue, employee_count, Funding.amount,
+    Acquisition.amount) are all typed `string` with no documented format, so their parsing rules
+    are undiscoverable from the contract.
+render: null

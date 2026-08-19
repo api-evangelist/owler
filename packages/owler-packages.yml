@@ -1,0 +1,86 @@
+generated: '2026-08-14'
+method: searched
+source: npm, PyPI, RubyGems, crates.io, Ballerina Central, pkg.go.dev and the Owler developer
+  portal (https://developers.owler.com/)
+checked: '2026-08-14'
+summary: >-
+  Owler publishes NO first-party client library in any language. Every registry was queried
+  unauthenticated on 2026-08-14 and there is no Owler-authored SDK on npm, PyPI, RubyGems,
+  crates.io, Maven Central, NuGet or pkg.go.dev, and no SDK, code sample or download link on the
+  developer portal — developers.owler.com is a bare Swagger UI with nothing around it. No `SDKs`
+  pointer is wired into apis.yml because official_count is 0. The three packages below are all
+  third-party wrappers built by other vendors from Owler's own OpenAPI, and every one of them is
+  stale, abandoned or built against the RETIRED v1 API on the dead api.owler.com host — which is a
+  finding in its own right: there is no maintained client for the current v3 contract anywhere.
+official_count: 0
+third_party_count: 3
+packages:
+- language: ballerina
+  registry: ballerina-central
+  name: ballerinax/owler
+  url: https://central.ballerina.io/ballerinax/owler/latest
+  install: bal add ballerinax/owler
+  official: false
+  publisher: WSO2 / Ballerina Central (ballerinax organization)
+  version: 1.5.1
+  published: '2023-05-11'
+  license: Apache-2.0
+  pull_count: 25
+  generated_from: Owler's OpenAPI
+  note: >-
+    The most complete third-party client, generated from an Owler spec and describing itself as
+    "Connects to Owler API from Ballerina". Last published 2023-05-11, more than three years before
+    this check, and it predates the current v3 contract. 25 total pulls.
+- language: javascript
+  registry: npm
+  name: '@n8n-dev/n8n-nodes-owler'
+  url: https://www.npmjs.com/package/@n8n-dev/n8n-nodes-owler
+  install: npm install @n8n-dev/n8n-nodes-owler
+  official: false
+  publisher: kelvinzero (community n8n node, not n8n.io and not Owler)
+  version: 1.0.1
+  published: '2026-06-09'
+  note: >-
+    A community n8n workflow node, not a general-purpose SDK. Its description is copied verbatim
+    from the LEGACY v1 spec ("Search for information on companies using a website or company name
+    and get access to Company Data, News, Blog Posts, Competitor Lists...") — the v1 search
+    capability it advertises does not exist in the current v3 contract. Recent, but built on a
+    retired surface.
+- language: javascript
+  registry: npm
+  name: '@datafire/owler'
+  url: https://www.npmjs.com/package/@datafire/owler
+  install: npm install @datafire/owler
+  official: false
+  publisher: DataFire
+  version: 6.0.0
+  published: '2020-12-21'
+  note: >-
+    Auto-generated DataFire integration wrapping the legacy v1 spec against api.owler.com, a host
+    that no longer completes a TLS handshake. Unmaintained for nearly six years; non-functional.
+not_found:
+  npm: >-
+    No Owler-authored package. `owler` on npm is an unrelated JavaScript templating library by
+    maintainer semmywong (v0.1.5, 2023-10-08), and `koa-owler` is a fork of it. Neither has any
+    connection to Owler Inc.
+  pypi: 'No package under owler, owler-api, pyowler or owler-sdk (all 404).'
+  rubygems: 'No gem named owler (404).'
+  crates_io: 'No crate named owler (404).'
+  maven_central: No Owler group or artifact.
+  nuget: No Owler package.
+  go: No module.
+github:
+  organization: null
+  note: >-
+    Owler has no GitHub organization. github.com/owler is the personal account of an unrelated
+    individual (Dmitry Savenko) and github.com/OwlerInc returns 404, so no `GitHubOrganization`
+    pointer is wired.
+cli:
+  present: false
+  note: No first-party CLI exists; no cli/ artifact was written.
+finding: >-
+  For a data-licensing API sold to engineering teams, the absence of any first-party or maintained
+  third-party client means every integrator writes raw HTTP against six GET endpoints. That is
+  survivable given how small the surface is, but it also means nothing in the ecosystem tracks the
+  v1 -> v3 migration: the two most discoverable clients still describe the retired search
+  endpoints.

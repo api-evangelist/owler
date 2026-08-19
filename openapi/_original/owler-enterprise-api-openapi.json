@@ -1,0 +1,1776 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Owler Enterprise API",
+      "description": "Integrate Owler’s exclusive company data and news data in your custom applications",
+      "termsOfService": "https://corp.owler.com/terms-conditions",
+      "version": "v3.0",
+      "contact": {
+        "name": "Owler Support",
+        "url": "https://owlerinc.happyfox.com/home/"
+      }
+    },
+    "servers": [
+      {
+        "url": "https://apiv2.owler.com"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Company Premium API",
+        "description": "Provides company premium information"
+      },
+      {
+        "name": "Competitor Premium API",
+        "description": "Provides Competitor Premium information"
+      },
+      {
+        "name": "Feed API",
+        "description": "Provides Feed information"
+      }
+    ],
+    "paths": {
+      "/v1/companypremium/url/{website}": {
+        "get": {
+          "tags": [
+            "Company Premium API"
+          ],
+          "summary": "Get Basic Company Info by Domain",
+          "description": "The Company Data API provides complete information about a company for the specified domain",
+          "operationId": "getCompanyByWebsite",
+          "parameters": [
+            {
+              "name": "website",
+              "in": "path",
+              "description": "Company Domain",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "format",
+              "in": "query",
+              "description": "Format of the response content - json (by default if not specified), xml",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "json",
+                  "xml"
+                ],
+                "default": "json"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Company Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/companyPremium"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Parameters",
+              "content": {}
+            },
+            "403": {
+              "description": "Authentication Failed",
+              "content": {}
+            },
+            "404": {
+              "description": "Resource Not Found",
+              "content": {}
+            },
+            "429": {
+              "description": "Too Many Requests",
+              "content": {}
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "uri": "https://apiv2.owler.com/v1/companypremium/url/{website}",
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "requestParameters": {
+              "integration.request.path.website": "method.request.path.website"
+            },
+            "passthroughBehavior": "when_no_match",
+            "httpMethod": "GET",
+            "type": "http"
+          }
+        }
+      },
+      "/v1/companypremium/id/{companyId}": {
+        "get": {
+          "tags": [
+            "Company Premium API"
+          ],
+          "summary": "Get Complete Company Info by Id",
+          "description": "The Company Premium Data API provides complete information about a company for the specified Company Id ",
+          "operationId": "getCompanyById",
+          "parameters": [
+            {
+              "name": "format",
+              "in": "query",
+              "description": "Format of the response content - json (by default if not specified), xml",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "json",
+                  "xml"
+                ],
+                "default" : "json"
+              }
+            },
+            {
+              "name": "companyId",
+              "in": "path",
+              "description": "Owler Id (e.g. 100486)",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Company Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/companyPremium"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Parameters",
+              "content": {}
+            },
+            "403": {
+              "description": "Authentication Failed",
+              "content": {}
+            },
+            "404": {
+              "description": "Resource Not Found",
+              "content": {}
+            },
+            "429": {
+              "description": "Too Many Requests",
+              "content": {}
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "uri": "https://apiv2.owler.com/v1/companypremium/id/{companyId}",
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "requestParameters": {
+              "integration.request.path.companyId": "method.request.path.companyId"
+            },
+            "passthroughBehavior": "when_no_match",
+            "httpMethod": "GET",
+            "type": "http"
+          }
+        }
+      },
+      "/v1/company/competitorpremium/url/{website}": {
+        "get": {
+          "tags": [
+            "Competitor Premium API"
+          ],
+          "summary": "Get Competitor information by Domain",
+          "description": "The Competitors API provides basic information about all competitors of a given company Domain",
+          "operationId": "getCompetitorsForWebsite",
+          "parameters": [
+            {
+              "name": "website",
+              "in": "path",
+              "description": "Domain",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pagination_id",
+              "in": "query",
+              "description": "Pass pagination_id as * in the first API request. The API response will return top competitors along with the next pagination_id which can be passed in the subsequent API request to get the next set of competitors. Repeat this process until needed or till the pagination_id returned is blank. Note:Every response will have maximum of 50 competitors.",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "format",
+              "in": "query",
+              "description": "Format of the response content - json (by default if not specified), xml",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "json",
+                  "xml"
+                ],
+                "default": "json"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Competitors Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/competitors"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Parameters",
+              "content": {}
+            },
+            "403": {
+              "description": "Authentication Failed",
+              "content": {}
+            },
+            "404": {
+              "description": "Resource Not Found",
+              "content": {}
+            },
+            "429": {
+              "description": "Too Many Requests",
+              "content": {}
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "uri": "https://apiv2.owler.com/v1/company/competitorpremium/url/{website}",
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "requestParameters": {
+              "integration.request.path.website": "method.request.path.website"
+            },
+            "passthroughBehavior": "when_no_match",
+            "httpMethod": "GET",
+            "type": "http"
+          }
+        }
+      },
+      "/v1/company/competitorpremium/id/{companyId}": {
+        "get": {
+          "tags": [
+            "Competitor Premium API"
+          ],
+          "summary": "Get Competitor information by Id",
+          "description": "The Competitors API provides basic information about all competitors of a given company Id",
+          "operationId": "getCompetitorsForId",
+          "parameters": [
+            {
+              "name": "pagination_id",
+              "in": "query",
+              "description": "Pass pagination_id as * in the first API request. The API response will return top competitors along with the next pagination_id which can be passed in the subsequent API request to get the next set of competitors. Repeat this process until needed or till the pagination_id returned is blank. Note:Every response will have maximum of 50 competitors.",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "format",
+              "in": "query",
+              "description": "Format of the response content - json (by default if not specified), xml",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "json",
+                  "xml"
+                ],
+                "default": "json"
+              }
+            },
+            {
+              "name": "companyId",
+              "in": "path",
+              "description": "Owler Id (e.g. 100486)",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Competitors Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/competitors"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Parameters",
+              "content": {}
+            },
+            "403": {
+              "description": "Authentication Failed",
+              "content": {}
+            },
+            "404": {
+              "description": "Resource Not Found",
+              "content": {}
+            },
+            "429": {
+              "description": "Too Many Requests",
+              "content": {}
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "uri": "https://apiv2.owler.com/v1/company/competitorpremium/id/{companyId}",
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "requestParameters": {
+              "integration.request.path.companyId": "method.request.path.companyId"
+            },
+            "passthroughBehavior": "when_no_match",
+            "httpMethod": "GET",
+            "type": "http"
+          }
+        }
+      },
+      "/v1/feed/url": {
+        "get": {
+          "tags": [
+            "Feed API"
+          ],
+          "summary": "Get Feeds for given Company Domains",
+          "description": "The Feeds API provides a list of feeds and individual feed information for the given Company Websites and Category. By default the API returns the latest 10 feeds available unless the limit is specified. The maximum result is restricted to 100 feeds per API request.",
+          "operationId": "getFeedsByWebsite",
+          "parameters": [
+            {
+              "name": "category",
+              "in": "query",
+              "description": "Categories separated by comma. If not specified, will search against all categories",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "NEWS",
+                  "PRESS",
+                  "FUNDING",
+                  "ACQUISITION",
+                  "PEOPLE",
+                  "BLOG",
+                  "VIDEOS"
+                ],
+                "required": false
+              }
+            },
+            {
+              "name": "domain",
+              "in": "query",
+              "description": "Company Websites separated by comma (Maximum of 10 Company Websites)",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "format",
+              "in": "query",
+              "description": "Format of the response content - json (by default if not specified), xml",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "json",
+                  "xml"
+                ],
+                "default": "json"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Number of results to be displayed - 10 (by default, if not specified) to 100",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pagination_id",
+              "in": "query",
+              "description": "Pass pagination_id as blank in the first API request. The API response will return the latest feeds along with the next pagination_id which can be passed in the subsequent API request to get the next set of feeds. Repeat this process until needed or till the pagination_id returned is blank",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Feeds Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/feedresults"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Parameters",
+              "content": {}
+            },
+            "403": {
+              "description": "Authentication Failed",
+              "content": {}
+            },
+            "429": {
+              "description": "Too Many Requests",
+              "content": {}
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "uri": "https://apiv2.owler.com/v1/feed/url",
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "passthroughBehavior": "when_no_match",
+            "httpMethod": "GET",
+            "type": "http_proxy"
+          }
+        }
+      },
+      "/v1/feed": {
+        "get": {
+          "tags": [
+            "Feed API"
+          ],
+          "summary": "Get Feeds for given Company Ids",
+          "description": "The Feeds API provides a list of feeds and individual feed information for the given Company Ids and Category. By default the API returns the latest 10 feeds available unless the limit is specified. The maximum result is restricted to 100 feeds per API request.",
+          "operationId": "getFeeds",
+          "parameters": [
+            {
+              "name": "company_id",
+              "in": "query",
+              "description": "Company Ids separated by comma (Maximum of 10 Company Ids)",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "category",
+              "in": "query",
+              "description": "Categories separated by comma. If not specified, will search against all categories",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "NEWS",
+                  "PRESS",
+                  "FUNDING",
+                  "ACQUISITION",
+                  "PEOPLE",
+                  "BLOG",
+                  "VIDEOS"
+                ]
+              }
+            },
+            {
+              "name": "format",
+              "in": "query",
+              "description": "Format of the response content - json (by default if not specified), xml",
+              "schema": {
+                "type": "string",
+                "enum" : [
+                  "json",
+                  "xml"
+                ],
+                "default": "json"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Number of results to be displayed - 10 (by default, if not specified) to 100",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pagination_id",
+              "in": "query",
+              "description": "Pass pagination_id as blank in the first API request. The API response will return the latest feeds along with the next pagination_id which can be passed in the subsequent API request to get the next set of feeds. Repeat this process until needed or till the pagination_id returned is blank",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Feeds Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/feedresults"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Parameters",
+              "content": {}
+            },
+            "403": {
+              "description": "Authentication Failed",
+              "content": {}
+            },
+            "429": {
+              "description": "Too Many Requests",
+              "content": {}
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "uri": "https://apiv2.owler.com/v1/feed",
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "passthroughBehavior": "when_no_match",
+            "httpMethod": "GET",
+            "type": "http_proxy"
+          }
+        }
+      }
+  
+    },
+    "components": {
+      "schemas": {
+        "feedresults": {
+          "type": "object",
+          "properties": {
+            "feed": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FeedsVO"
+              }
+            },
+            "pagination_id": {
+              "type": "string"
+            }
+          }
+        },
+        "competitors": {
+          "type": "object",
+          "properties": {
+            "competitor": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CompetitorBasicVO"
+              }
+            },
+            "pagination_id": {
+              "type": "string"
+            }
+          }
+        },
+        "FeedsVO": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string"
+            },
+            "company": {
+              "$ref": "#/components/schemas/CompanyBasicVO"
+            },
+            "description": {
+              "type": "string"
+            },
+            "enclosure_image": {
+              "type": "string"
+            },
+            "feed_date": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "owler_feed_url": {
+              "type": "string"
+            },
+            "publisher_logo": {
+              "type": "string"
+            },
+            "publisher_name": {
+              "type": "string"
+            },
+            "source_url": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "Address": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "postal_code": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "street1": {
+              "type": "string"
+            },
+            "street2": {
+              "type": "string"
+            }
+          }
+        },
+        "CompanyBasicVO": {
+          "required": [
+            "company_id",
+            "logo_url",
+            "name",
+            "profile_url",
+            "website"
+          ],
+          "type": "object",
+          "properties": {
+            "company_id": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "logo_url": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "profile_url": {
+              "type": "string"
+            },
+            "short_name": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            },
+            "owler_generated_logo": {
+                "type": "boolean"
+            }
+          }
+        },
+        "Funding": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "investor": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Investor"
+              }
+            },
+            "type": {
+              "type": "string"
+            },
+            "undisclosed": {
+              "type": "string"
+            }
+          }
+        },
+        "companyPremium": {
+          "required": [
+            "company_id",
+            "logo_url",
+            "name",
+            "profile_url",
+            "website"
+          ],
+          "type": "object",
+          "properties": {
+            "acquisition": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Acquisition"
+              }
+            },
+            "ceo": {
+              "$ref": "#/components/schemas/Ceo"
+            },
+            "company_id": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "company_type": {
+              "type": "string",
+              "enum": [
+                "Private",
+                "Public",
+                "Product/Brand/Service",
+                "NGO/NPO/NFP/Organization/Association",
+                "Investment Company",
+                "Government"
+              ]
+            },
+            "description": {
+              "type": "string"
+            },
+            "employee_count": {
+              "type": "string"
+            },
+            "facebook_link": {
+              "type": "string"
+            },
+            "founded_date": {
+              "type": "string"
+            },
+            "funding": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Funding"
+              }
+            },
+            "hq_address": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "industries": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "linkedin_link": {
+              "type": "string"
+            },
+            "logo_url": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "perm_id": {
+              "type": "string"
+            },
+            "portfolio_company_ids": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+
+            "profile_url": {
+              "type": "string"
+            },
+            "owler_generated_logo": {
+                "type": "boolean"
+            },
+            "revenue": {
+              "type": "string"
+            },
+            "short_name": {
+              "type": "string"
+            },
+            "sic_code": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+            },
+            "stock": {
+              "$ref": "#/components/schemas/Stock"
+            },
+            "twitter_link": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            },
+            "youtube_link": {
+              "type": "string"
+            },
+            "alternative_websites": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+            }
+          }
+        },
+        "Ceo": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            }
+          }
+        },
+        "Investor": {
+          "type": "object",
+          "properties": {
+            "company_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            }
+          }
+        },
+        "CompetitorBasicVO": {
+          "required": [
+            "company_id",
+            "logo_url",
+            "name",
+            "profile_url",
+            "score",
+            "website"
+          ],
+          "type": "object",
+          "properties": {
+            "company_id": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "logo_url": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "profile_url": {
+              "type": "string"
+            },
+            "score": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "short_name": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            }
+          }
+        },
+        "Acquisition": {
+          "type": "object",
+          "properties": {
+            "acquirer_company_id": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string"
+            },
+            "company_id": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "undisclosed": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            }
+          }
+        },
+        "Stock": {
+          "type": "object",
+          "properties": {
+            "exchange": {
+              "type": "string"
+            },
+            "ticker": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "api_key": {
+          "type": "apiKey",
+          "name": "x-api-key",
+          "in": "header"
+        }
+      }
+    },
+    "x-amazon-apigateway-documentation": {
+      "version": "2.0",
+      "createdDate": "2020-10-29T23:09:56Z",
+      "documentationParts": [
+        {
+          "location": {
+            "type": "API"
+          },
+          "properties": {
+            "tags": [
+              {
+                "name": "Company API",
+                "description": "Provides Company information"
+              },
+              {
+                "name": "Company Premium API",
+                "description": "Provides company premium information"
+              },
+              {
+                "name": "Competitor Premium API",
+                "description": "Provides Competitor Premium information"
+              },
+              {
+                "name": "Feed API",
+                "description": "Provides Feed information"
+              },
+              {
+                "name": "Deprecated API"
+              }
+            ]
+          }
+        },
+        {
+          "location": {
+            "type": "METHOD",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET"
+          },
+          "properties": {
+            "tags": [
+              "Competitor Premium API"
+            ],
+            "summary": "Get Competitor information by Id",
+            "description": "The Competitors API provides basic information about all competitors of a given company Id"
+          }
+        },
+        {
+          "location": {
+            "type": "METHOD",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET"
+          },
+          "properties": {
+            "tags": [
+              "Competitor Premium API"
+            ],
+            "summary": "Get Competitor information by Id",
+            "description": "The Competitors API provides basic information about all competitors of a given company Id"
+          }
+        },
+        {
+          "location": {
+            "type": "METHOD",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET"
+          },
+          "properties": {
+            "tags": [
+              "Company Premium API"
+            ],
+            "summary": "Get Complete Company Info by Id",
+            "description": "The Company Premium Data API provides complete information about a company for the specified Company Id "
+          }
+        },
+        {
+          "location": {
+            "type": "METHOD",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET"
+          },
+          "properties": {
+            "tags": [
+              "Company Premium API"
+            ],
+            "summary": "Get Basic Company Info by Url",
+            "description": "The Company Data API provides complete information about a company for the specified URL "
+          }
+        },
+        {
+          "location": {
+            "type": "METHOD",
+            "path": "/v1/feed/url",
+            "method": "GET"
+          },
+          "properties": {
+            "tags": [
+              "Feed API"
+            ],
+            "summary": "Get Feeds for given Company Websites",
+            "description": "The Feeds API provides a list of feeds and individual feed information for the given Company Websites and Category. By default the API returns the latest 10 feeds available unless the limit is specified. The maximum result is restricted to 100 feeds per API request."
+          }
+        },
+        {
+          "location": {
+            "type": "METHOD",
+            "path": "/v1/feed",
+            "method": "GET"
+          },
+          "properties": {
+            "tags": [
+              "Feed API"
+            ],
+            "summary": "Get Feeds for given Company Ids",
+            "description": "The Feeds API provides a list of feeds and individual feed information for the given Company Ids and Category. By default the API returns the latest 10 feeds available unless the limit is specified. The maximum result is restricted to 100 feeds per API request."
+          }
+        },
+        {
+          "location": {
+            "type": "PATH_PARAMETER",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "name": "companyId"
+          },
+          "properties": {
+            "description": "Company Id"
+          }
+        },
+        {
+          "location": {
+            "type": "PATH_PARAMETER",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "name": "companyId"
+          },
+          "properties": {
+            "description": "Company Id"
+          }
+        },
+        {
+          "location": {
+            "type": "PATH_PARAMETER",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "name": "website"
+          },
+          "properties": {
+            "description": "Company Id"
+          }
+        },
+        {
+          "location": {
+            "type": "PATH_PARAMETER",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "name": "website"
+          },
+          "properties": {
+            "description": "Company Domain"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "name": "category"
+          },
+          "properties": {
+            "description": "Categories separated by comma. If not specified, will search against all categories"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed",
+            "method": "GET",
+            "name": "category"
+          },
+          "properties": {
+            "description": "Categories separated by comma. If not specified, will search against all categories"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed",
+            "method": "GET",
+            "name": "company_id"
+          },
+          "properties": {
+            "description": "Company Ids separated by comma (Maximum of 10 Company Ids)"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "name": "domain"
+          },
+          "properties": {
+            "description": "Company Websites separated by comma (Maximum of 10 Company Websites)"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "name": "format"
+          },
+          "properties": {
+            "description": "Format of the response content - json (by default if not specified), xml"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "name": "format"
+          },
+          "properties": {
+            "description": "Format of the response content - json (by default if not specified), xml"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "name": "format"
+          },
+          "properties": {
+            "description": "Format of the response content - json (by default if not specified), xml"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "name": "format"
+          },
+          "properties": {
+            "description": "Format of the response content - json (by default if not specified), xml"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "name": "format"
+          },
+          "properties": {
+            "description": "Format of the response content - json (by default if not specified), xml"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed",
+            "method": "GET",
+            "name": "format"
+          },
+          "properties": {
+            "description": "Format of the response content - json (by default if not specified), xml"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "name": "limit"
+          },
+          "properties": {
+            "description": "Number of results to be displayed - 10 (by default, if not specified) to 100"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed",
+            "method": "GET",
+            "name": "limit"
+          },
+          "properties": {
+            "description": "Number of results to be displayed - 10 (by default, if not specified) to 100"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "name": "pagination_id"
+          },
+          "properties": {
+            "description": "Pass pagination_id as * in the first API request. The API response will return top competitors along with the next pagination_id which can be passed in the subsequent API request to get the next set of competitors. Repeat this process until needed or till the pagination_id returned is blank. Note:Every response will have maximum of 50 competitors."
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "name": "pagination_id"
+          },
+          "properties": {
+            "description": "Pass pagination_id as * in the first API request. The API response will return top competitors along with the next pagination_id which can be passed in the subsequent API request to get the next set of competitors. Repeat this process until needed or till the pagination_id returned is blank. Note:Every response will have maximum of 50 competitors."
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "name": "pagination_id"
+          },
+          "properties": {
+            "description": "Pass pagination_id as blank in the first API request. The API response will return the latest feeds along with the next pagination_id which can be passed in the subsequent API request to get the next set of feeds. Repeat this process until needed or till the pagination_id returned is blank"
+          }
+        },
+        {
+          "location": {
+            "type": "QUERY_PARAMETER",
+            "path": "/v1/feed",
+            "method": "GET",
+            "name": "pagination_id"
+          },
+          "properties": {
+            "description": "Pass pagination_id as blank in the first API request. The API response will return the latest feeds along with the next pagination_id which can be passed in the subsequent API request to get the next set of feeds. Repeat this process until needed or till the pagination_id returned is blank"
+          }
+        },
+        {
+          "location": {
+            "type": "REQUEST_HEADER",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "name": "user_key"
+          },
+          "properties": {
+            "description": "API Access Key"
+          }
+        },
+        {
+          "location": {
+            "type": "REQUEST_HEADER",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "name": "user_key"
+          },
+          "properties": {
+            "description": "API Access Key"
+          }
+        },
+        {
+          "location": {
+            "type": "REQUEST_HEADER",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "name": "user_key"
+          },
+          "properties": {
+            "description": "API Access Key"
+          }
+        },
+        {
+          "location": {
+            "type": "REQUEST_HEADER",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "name": "user_key"
+          },
+          "properties": {
+            "description": "API Access Key"
+          }
+        },
+        {
+          "location": {
+            "type": "REQUEST_HEADER",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "name": "user_key"
+          },
+          "properties": {
+            "description": "API Access Key"
+          }
+        },
+        {
+          "location": {
+            "type": "REQUEST_HEADER",
+            "path": "/v1/feed",
+            "method": "GET",
+            "name": "user_key"
+          },
+          "properties": {
+            "description": "API Access Key"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "200"
+          },
+          "properties": {
+            "description": "Competitors Data"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "400"
+          },
+          "properties": {
+            "description": "Invalid Parameters"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "403"
+          },
+          "properties": {
+            "description": "Authentication Failed"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "404"
+          },
+          "properties": {
+            "description": "Resource Not Found"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "429"
+          },
+          "properties": {
+            "description": "Too Many Requests"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "500"
+          },
+          "properties": {
+            "description": "Internal Server Error"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "statusCode": "200"
+          },
+          "properties": {
+            "description": "Competitors Data"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "statusCode": "400"
+          },
+          "properties": {
+            "description": "Invalid Parameters"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "statusCode": "403"
+          },
+          "properties": {
+            "description": "Authentication Failed"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "statusCode": "404"
+          },
+          "properties": {
+            "description": "Resource Not Found"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "statusCode": "429"
+          },
+          "properties": {
+            "description": "Too Many Requests"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/company/competitorpremium/url/{website}",
+            "method": "GET",
+            "statusCode": "500"
+          },
+          "properties": {
+            "description": "Internal Server Error"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "200"
+          },
+          "properties": {
+            "description": "Company Data"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "400"
+          },
+          "properties": {
+            "description": "Invalid Parameters"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "403"
+          },
+          "properties": {
+            "description": "Authentication Failed"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "404"
+          },
+          "properties": {
+            "description": "Resource Not Found"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "429"
+          },
+          "properties": {
+            "description": "Too Many Requests"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/id/{companyId}",
+            "method": "GET",
+            "statusCode": "500"
+          },
+          "properties": {
+            "description": "Internal Server Error"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "statusCode": "200"
+          },
+          "properties": {
+            "description": "Company Data"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "statusCode": "400"
+          },
+          "properties": {
+            "description": "Invalid Parameters"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "statusCode": "403"
+          },
+          "properties": {
+            "description": "Authentication Failed"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "statusCode": "404"
+          },
+          "properties": {
+            "description": "Resource Not Found"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "statusCode": "429"
+          },
+          "properties": {
+            "description": "Too Many Requests"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/companypremium/url/{website}",
+            "method": "GET",
+            "statusCode": "500"
+          },
+          "properties": {
+            "description": "Internal Server Error"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "statusCode": "200"
+          },
+          "properties": {
+            "description": "Feeds Data"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "statusCode": "400"
+          },
+          "properties": {
+            "description": "Invalid Parameters"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "statusCode": "403"
+          },
+          "properties": {
+            "description": "Authentication Failed"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "statusCode": "429"
+          },
+          "properties": {
+            "description": "Too Many Requests"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed/url",
+            "method": "GET",
+            "statusCode": "500"
+          },
+          "properties": {
+            "description": "Internal Server Error"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed",
+            "method": "GET",
+            "statusCode": "200"
+          },
+          "properties": {
+            "description": "Feeds Data"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed",
+            "method": "GET",
+            "statusCode": "400"
+          },
+          "properties": {
+            "description": "Invalid Parameters"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed",
+            "method": "GET",
+            "statusCode": "403"
+          },
+          "properties": {
+            "description": "Authentication Failed"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed",
+            "method": "GET",
+            "statusCode": "429"
+          },
+          "properties": {
+            "description": "Too Many Requests"
+          }
+        },
+        {
+          "location": {
+            "type": "RESPONSE",
+            "path": "/v1/feed",
+            "method": "GET",
+            "statusCode": "500"
+          },
+          "properties": {
+            "description": "Internal Server Error"
+          }
+        }
+      ]
+    }
+  }
+  

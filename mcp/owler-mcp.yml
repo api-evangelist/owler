@@ -1,0 +1,99 @@
+generated: '2026-08-14'
+method: derived
+status: candidate
+source: openapi/_original/owler-enterprise-api-openapi.json
+summary: >-
+  Owler ships NO MCP server. Searched the developer portal, corp.owler.com, npm (including the
+  @modelcontextprotocol and @owler scopes), PyPI and the public MCP directories, and probed
+  mcp.owler.com (does not resolve) and the /mcp path on every Owler host. Nothing exists. The tool
+  list below is a CANDIDATE derived one-to-one from the six operations in the published OpenAPI —
+  it is a design proposal for what an Owler MCP server would expose, not a server anyone can call.
+  Owler's only shipped agent-adjacent surface is the 2023 ChatGPT plugin
+  (https://corp.owler.com/blog/owler-launches-chatgpt-plugin-), announced against the OpenAI plugin
+  system that has since been retired; no /.well-known/ai-plugin.json is served on any Owler host
+  today.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  auth_note: >-
+    Any server built from this contract would carry the caller's Owler x-api-key. There is no OAuth
+    authorization server, no scopes and no per-tool consent surface to bind to, so key custody is
+    the whole security model.
+  verified: probed
+  probes:
+  - {url: 'https://mcp.owler.com/', result: DNS does not resolve}
+  - {url: 'https://apiv2.owler.com/mcp', result: '403 Missing Authentication Token (AWS API Gateway
+      route miss)'}
+  - {url: 'https://apiv2.owler.com/.well-known/ai-plugin.json', result: 403 route miss}
+  - {url: 'https://corp.owler.com/.well-known/ai-plugin.json', result: 404}
+server:
+  name: owler
+  transport: null
+  url: null
+tools:
+- name: get_company_by_domain
+  description: Get the complete Owler company record — firmographics, funding, acquisitions, CEO,
+    HQ address and stock listing — for a company website domain.
+  source_operation: openapi/owler-enterprise-api-openapi.yml#getCompanyByWebsite
+  inputs_from_spec:
+  - 'website (path, required)'
+  - 'format (query, enum json|xml)'
+- name: get_company_by_id
+  description: Get the complete Owler company record for an Owler company id.
+  source_operation: openapi/owler-enterprise-api-openapi.yml#getCompanyById
+  inputs_from_spec:
+  - 'companyId (path, required)'
+  - 'format (query, enum json|xml)'
+- name: get_competitors_by_domain
+  description: List the crowdsourced competitors of a company by website domain, each with an Owler
+    competitive score.
+  source_operation: openapi/owler-enterprise-api-openapi.yml#getCompetitorsForWebsite
+  inputs_from_spec:
+  - 'website (path, required)'
+  - "pagination_id (query, '*' on first page)"
+  - 'format (query)'
+- name: get_competitors_by_id
+  description: List the crowdsourced competitors of a company by Owler company id, each with an
+    Owler competitive score.
+  source_operation: openapi/owler-enterprise-api-openapi.yml#getCompetitorsForId
+  inputs_from_spec:
+  - 'companyId (path, required)'
+  - "pagination_id (query, '*' on first page)"
+  - 'format (query)'
+- name: get_feeds_by_domain
+  description: Get Owler news and business-event items for up to 10 company domains, optionally
+    filtered by category.
+  source_operation: openapi/owler-enterprise-api-openapi.yml#getFeedsByWebsite
+  inputs_from_spec:
+  - 'domain (query, required, max 10 comma-separated)'
+  - 'category (query, enum NEWS|PRESS|FUNDING|ACQUISITION|PEOPLE|BLOG|VIDEOS)'
+  - 'limit (query, 10-100)'
+  - 'pagination_id (query, blank on first page)'
+  - 'format (query)'
+- name: get_feeds_by_company_id
+  description: Get Owler news and business-event items for up to 10 Owler company ids, optionally
+    filtered by category.
+  source_operation: openapi/owler-enterprise-api-openapi.yml#getFeeds
+  inputs_from_spec:
+  - 'company_id (query, required, max 10 comma-separated)'
+  - 'category (query, enum NEWS|PRESS|FUNDING|ACQUISITION|PEOPLE|BLOG|VIDEOS)'
+  - 'limit (query, 10-100)'
+  - 'pagination_id (query, blank on first page)'
+  - 'format (query)'
+design_notes:
+- Every tool is read-only and safe to retry; no destructive or write tool exists in this contract.
+- The two Feed tools are the natural batch primitives (10 identifiers per call); the four company
+  and competitor tools are strictly single-subject, so an agent enriching a list must fan out.
+- A real server should surface the 429 back to the agent as a retryable condition, since Owler
+  publishes no limit and no Retry-After (see rate-limits/owler-rate-limits.yml).
+- The `format` parameter should be pinned to json and NOT exposed as a tool input — an agent has no
+  reason to request xml, and the xml shape is undocumented.
+crosswalk: null
+crosswalk_note: >-
+  No mcp/owler-tool-crosswalk.yml was written. A crosswalk binds a REAL published MCP tool list (or
+  GraphQL field set) to backing OpenAPI operations; Owler publishes neither, so a crosswalk here
+  would only restate the one-to-one derivation already recorded in tools[] above and would imply a
+  divergence between surfaces that does not exist.
