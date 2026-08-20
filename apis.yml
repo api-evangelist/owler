@@ -47,6 +47,18 @@ tags:
 - Market Research
 - Firmographics
 - Company Search
+- funding-data
+tags_raw:
+- Company
+- Company Intelligence
+- Sales Intelligence
+- Competitive Intelligence
+- Business Data
+- Data Licensing
+- News Monitoring
+- Market Research
+- Firmographics
+- Company Search
 - Funding Data
 apis:
 - name: Owler Enterprise API
@@ -61,6 +73,15 @@ apis:
   humanURL: https://developers.owler.com/
   baseURL: https://apiv2.owler.com
   tags:
+  - Company Data
+  - Firmographics
+  - Competitive Intelligence
+  - Company Search
+  - News Monitoring
+  - funding-data
+  - Sales Intelligence
+  - Data Licensing
+  tags_raw:
   - company-data
   - firmographics
   - competitive-intelligence
