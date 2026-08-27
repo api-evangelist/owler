@@ -61,38 +61,16 @@ tags_raw:
 - Company Search
 - Funding Data
 apis:
-- name: Owler Enterprise API
-  description: 'Read-only REST API over Owler''s company graph. Three products in one
-    OpenAPI 3.0.1 definition: Company Premium (complete firmographics, funding, acquisitions,
-    stock and CEO data for a company looked up by domain or Owler company id), Competitor
-    Premium (the crowdsourced competitor list for a company by domain or id), and Feed
-    (Owler news and event items for a batch of company ids or domains). Every operation
-    is a GET, authenticated with a per-account API key in the x-api-key request header,
-    and served from https://apiv2.owler.com. Keys are issued through the Owler data-licensing
-    sales process, not self-serve signup.'
+- aid: owler:owler-company-premium-api-api
+  name: Owler Company Premium API
+  description: Provides company premium information
   humanURL: https://developers.owler.com/
   baseURL: https://apiv2.owler.com
   tags:
-  - Company Data
-  - Firmographics
-  - Competitive Intelligence
-  - Company Search
-  - News Monitoring
-  - funding-data
-  - Sales Intelligence
-  - Data Licensing
-  tags_raw:
-  - company-data
-  - firmographics
-  - competitive-intelligence
-  - company-search
-  - news-monitoring
-  - funding-data
-  - sales-intelligence
-  - data-licensing
+  - Company Premium API
   properties:
   - type: OpenAPI
-    url: openapi/owler-enterprise-api-openapi.yml
+    url: openapi/owler-company-premium-api-api-openapi.yml
   - type: Documentation
     url: https://developers.owler.com/
   - type: APIReference
@@ -111,14 +89,70 @@ apis:
     url: errors/owler-problem-types.yml
   - type: RateLimits
     url: rate-limits/owler-rate-limits.yml
-  - type: Overlay
-    url: overlays/owler-enterprise-api-overlay.yaml
+- aid: owler:owler-competitor-premium-api-api
+  name: Owler Competitor Premium API
+  description: Provides Competitor Premium information
+  humanURL: https://developers.owler.com/
+  baseURL: https://apiv2.owler.com
+  tags:
+  - Competitor Premium API
+  properties:
+  - type: OpenAPI
+    url: openapi/owler-competitor-premium-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.owler.com/
+  - type: APIReference
+    url: https://developers.owler.com/
+  - type: DeveloperPortal
+    url: https://developers.owler.com/
+  - type: Sandbox
+    url: sandbox/owler-sandbox.yml
+  - type: Authentication
+    url: authentication/owler-authentication.yml
+  - type: Conventions
+    url: conventions/owler-conventions.yml
+  - type: DataModel
+    url: data-model/owler-data-model.yml
+  - type: ErrorCatalog
+    url: errors/owler-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/owler-rate-limits.yml
+- aid: owler:owler-feed-api-api
+  name: Owler Feed API
+  description: Provides Feed information
+  humanURL: https://developers.owler.com/
+  baseURL: https://apiv2.owler.com
+  tags:
+  - Feed API
+  properties:
+  - type: OpenAPI
+    url: openapi/owler-feed-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.owler.com/
+  - type: APIReference
+    url: https://developers.owler.com/
+  - type: DeveloperPortal
+    url: https://developers.owler.com/
+  - type: Sandbox
+    url: sandbox/owler-sandbox.yml
+  - type: Authentication
+    url: authentication/owler-authentication.yml
+  - type: Conventions
+    url: conventions/owler-conventions.yml
+  - type: DataModel
+    url: data-model/owler-data-model.yml
+  - type: ErrorCatalog
+    url: errors/owler-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/owler-rate-limits.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/owler-enterprise-api-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/owler-agentic-access.yml
 - type: Website
