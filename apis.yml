@@ -59,7 +59,7 @@ tags:
 - Market Research
 - Firmographics
 - Company Search
-- funding-data
+- Funding Data
 tags_raw:
 - Company
 - Company Intelligence
@@ -163,6 +163,11 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: ParentCompany
+  url: https://apis.io/providers/meltwater/
+  name: Meltwater
+  x-relationship: acquired
+  x-evidence: "Owler was acquired by Meltwater in 2021."
 - type: Overlay
   url: overlays/owler-enterprise-api-overlay.yaml
 - type: AgenticAccess
