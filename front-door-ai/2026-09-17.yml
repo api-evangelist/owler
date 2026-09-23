@@ -1,0 +1,27 @@
+# Front Door AI Index — owler — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: owler
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: corp.owler.com
+  final_host: corp.owler.com
+  ownership: own
+  owner: owler
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 4
+  host_score: 4
+  density: 6.2
+  words: 645
+  tiers:
+    agentic: 1
+    core: 3
+    model: 0
+  ambiguous: 1
+  top_terms:
+    AI: 3
+    intelligence: 1
+    prompts: 1

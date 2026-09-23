@@ -75,7 +75,7 @@ paths:
       tags:
       - Company Premium API
       summary: Get Complete Company Info by Id
-      description: 'The Company Premium Data API provides complete information about a company for the specified Company Id '
+      description: The Company Premium Data API provides complete information about a company for the specified Company Id
       operationId: getCompanyById
       parameters:
       - name: format
@@ -129,24 +129,38 @@ paths:
         type: http
 components:
   schemas:
-    Acquisition:
+    Ceo:
       type: object
       properties:
-        acquirer_company_id:
+        first_name:
           type: string
-        amount:
+        image_url:
           type: string
-        company_id:
+        last_name:
           type: string
-        date:
+    Address:
+      type: object
+      properties:
+        city:
           type: string
-        name:
+        country:
           type: string
-        status:
+        phone:
           type: string
-        undisclosed:
+        postal_code:
           type: string
-        website:
+        state:
+          type: string
+        street1:
+          type: string
+        street2:
+          type: string
+    Stock:
+      type: object
+      properties:
+        exchange:
+          type: string
+        ticker:
           type: string
     companyPremium:
       required:
@@ -230,14 +244,14 @@ components:
           type: array
           items:
             type: string
-    Ceo:
+    Investor:
       type: object
       properties:
-        first_name:
+        company_id:
           type: string
-        image_url:
+        name:
           type: string
-        last_name:
+        website:
           type: string
     Funding:
       type: object
@@ -254,38 +268,24 @@ components:
           type: string
         undisclosed:
           type: string
-    Address:
+    Acquisition:
       type: object
       properties:
-        city:
+        acquirer_company_id:
           type: string
-        country:
+        amount:
           type: string
-        phone:
-          type: string
-        postal_code:
-          type: string
-        state:
-          type: string
-        street1:
-          type: string
-        street2:
-          type: string
-    Investor:
-      type: object
-      properties:
         company_id:
+          type: string
+        date:
           type: string
         name:
           type: string
+        status:
+          type: string
+        undisclosed:
+          type: string
         website:
-          type: string
-    Stock:
-      type: object
-      properties:
-        exchange:
-          type: string
-        ticker:
           type: string
   securitySchemes:
     api_key:
