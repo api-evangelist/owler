@@ -139,6 +139,15 @@ paths:
         type: http
 components:
   schemas:
+    competitors:
+      type: object
+      properties:
+        competitor:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompetitorBasicVO'
+        pagination_id:
+          type: string
     CompetitorBasicVO:
       required:
       - company_id
@@ -164,15 +173,6 @@ components:
         short_name:
           type: string
         website:
-          type: string
-    competitors:
-      type: object
-      properties:
-        competitor:
-          type: array
-          items:
-            $ref: '#/components/schemas/CompetitorBasicVO'
-        pagination_id:
           type: string
   securitySchemes:
     api_key:

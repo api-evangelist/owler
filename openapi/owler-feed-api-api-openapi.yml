@@ -166,15 +166,6 @@ paths:
         type: http_proxy
 components:
   schemas:
-    feedresults:
-      type: object
-      properties:
-        feed:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeedsVO'
-        pagination_id:
-          type: string
     CompanyBasicVO:
       required:
       - company_id
@@ -223,6 +214,15 @@ components:
         source_url:
           type: string
         title:
+          type: string
+    feedresults:
+      type: object
+      properties:
+        feed:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeedsVO'
+        pagination_id:
           type: string
   securitySchemes:
     api_key:
