@@ -166,30 +166,15 @@ paths:
         type: http_proxy
 components:
   schemas:
-    CompanyBasicVO:
-      required:
-      - company_id
-      - logo_url
-      - name
-      - profile_url
-      - website
+    feedresults:
       type: object
       properties:
-        company_id:
-          type: integer
-          format: int64
-        logo_url:
+        feed:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeedsVO'
+        pagination_id:
           type: string
-        name:
-          type: string
-        profile_url:
-          type: string
-        short_name:
-          type: string
-        website:
-          type: string
-        owler_generated_logo:
-          type: boolean
     FeedsVO:
       type: object
       properties:
@@ -215,15 +200,30 @@ components:
           type: string
         title:
           type: string
-    feedresults:
+    CompanyBasicVO:
+      required:
+      - company_id
+      - logo_url
+      - name
+      - profile_url
+      - website
       type: object
       properties:
-        feed:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeedsVO'
-        pagination_id:
+        company_id:
+          type: integer
+          format: int64
+        logo_url:
           type: string
+        name:
+          type: string
+        profile_url:
+          type: string
+        short_name:
+          type: string
+        website:
+          type: string
+        owler_generated_logo:
+          type: boolean
   securitySchemes:
     api_key:
       type: apiKey
