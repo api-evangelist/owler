@@ -163,6 +163,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/owler-capability-edges.yml
+  name: Owler Business Capability Map
 - type: ParentCompany
   url: https://apis.io/providers/meltwater/
   name: Meltwater

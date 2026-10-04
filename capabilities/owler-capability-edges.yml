@@ -1,0 +1,45 @@
+slug: owler
+provider: Owler
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Competitor Premium API
+  spec_file: owler-competitor-premium-api-api-openapi.yml
+  capability_id: BC-400.30
+  capability_id_l1: BC-400
+  capability_name: Market Intelligence Management
+  confidence: 0.85
+  evidence: '''Get Competitor information by Domain''; schemas competitors, CompetitorBasicVO'
+  reason: Explicitly returns competitor relationships for a company, which is competitive intelligence
+    within market intelligence management.
+- tag: Company Premium API
+  spec_file: owler-company-premium-api-api-openapi.yml
+  capability_id: BC-400.30
+  capability_id_l1: BC-400
+  capability_name: Market Intelligence Management
+  confidence: 0.8
+  evidence: '''Get Complete Company Info by Id''; schemas Funding, Acquisition, Investor, Stock; vendor
+    ''competitive- and business-intelligence platform ... tracking firmographics, funding, and news'''
+  reason: Delivers external firmographic, funding and M&A intelligence on companies — market and competitive
+    intelligence consumption, not internal customer master data.
+- tag: Feed API
+  spec_file: owler-feed-api-api-openapi.yml
+  capability_id: BC-400.30
+  capability_id_l1: BC-400
+  capability_name: Market Intelligence Management
+  confidence: 0.7
+  evidence: '''Get Feeds for given Company Domains''; schemas feedresults, FeedsVO, CompanyBasicVO; vendor
+    tracks ''firmographics, funding, and news'''
+  reason: Company news feeds consumed for business/competitive intelligence; the feed is keyed by company
+    and carries Owler's news signal, so market intelligence is the fitting capability, though the operation
+    summaries are terse.
