@@ -1,0 +1,24 @@
+generated: '2026-10-21'
+method: searched
+checked:
+- hubspot/integrations/hubspot-integration-edges.yml
+source:
+- hubspot/integrations/hubspot-integration-edges.yml
+edges:
+- partner_name: HubSpot (own)
+  partner: hubspot
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://ecosystem.hubspot.com/marketplace/listing/owler-max-821924
+  mirror_of: hubspot/integrations/hubspot-integration-edges.yml
+  apps:
+  - Owler Max
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: SALES_ENABLEMENT
