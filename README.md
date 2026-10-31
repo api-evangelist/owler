@@ -64,6 +64,126 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Owler is a company surfaced as a portfolio company of norwest-venture-partners and added to the API Evangelist network as a stub for enrichment. Sector: unknown. This profile is a lead awaiting the enrichment pipeline.
+Owler is a crowdsourced competitive- and business-intelligence platform that maintains real-time profiles on more than 20 million public and private companies, tracking firmographics, funding, and news across 45M+ competitive relationships contributed and validated by a community of 5M+ business professionals. It is delivered as web and mobile apps (Owler Community, Pro, and Max), a Chrome extension, and CRM and collaboration integrations (Salesforce, HubSpot, Slack, Microsoft Teams, ChatGPT). The Owler Enterprise API is a real, publicly documented REST API: a Swagger UI developer portal at developers.owler.com renders an OpenAPI 3.0.1 definition (six read operations across Company Premium, Competitor Premium and Feed, served from https://apiv2.owler.com, authenticated with an x-api-key header) that is fetchable at https://developers-v3.owler.com/apis/api3-swagger.json. Access to the data itself is sold through the data-licensing sales motion rather than self-serve signup, and Owler ships no first-party SDKs, CLI or MCP server. Owler was acquired by Meltwater in 2021. Added to the API Evangelist network from the Norwest Venture Partners portfolio.
 
-Backed by: norwest-venture-partners — https://corp.owler.com
+**Areas:** Company · Company Intelligence · Sales Intelligence · Competitive Intelligence · Business Data · Data Licensing · News Monitoring · Market Research · Firmographics · Company Search · Funding Data
+
+## Owler on APIs.io
+
+Everything profiled for Owler is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/owler/](https://apis.io/providers/owler/)** — or go straight to one of the APIs or properties below.
+
+### APIs (3)
+
+- [Owler Company Premium API](https://apis.io/apis/owler/owler-company-premium-api-api/) — Provides company premium information
+- [Owler Competitor Premium API](https://apis.io/apis/owler/owler-competitor-premium-api-api/) — Provides Competitor Premium information
+- [Owler Feed API](https://apis.io/apis/owler/owler-feed-api-api/) — Provides Feed information
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [owler](https://apis.io/servers/owler/owler/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Owler Agentic Access](https://apis.io/agentic-access/owler/owler-agentic-access/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Owler Enterprise Api Overlay](https://apis.io/overlays/owler/owler-enterprise-api-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Owler Authentication](https://apis.io/security/owler/owler-authentication/)
+- [Owler Domain Security](https://apis.io/security/owler/owler-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Owler Plans Pricing](https://apis.io/plans/owler/owler-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Owler Rate Limits](https://apis.io/rate-limits/owler/owler-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://corp.owler.com)
+- [Documentation](https://developers.owler.com/)
+- [API reference](https://developers.owler.com/)
+- [Pricing](https://www.owler.com/checkout/owlerpro)
+- [Support](https://owlerinc.happyfox.com/home/)
+- [Blog](https://corp.owler.com/blog)
+- [Terms of service](https://corp.owler.com/terms-conditions)
+- [Privacy policy](https://corp.owler.com/privacy-notice)
+- [Status](https://status.owler.com/)
+
+## API Evangelist rating
+
+**Kin Score 41.4** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 50.8 |
+| Contract governance | 4.5 |
+| Operational transparency | 15.8 |
+| Developer ergonomics | 54.2 |
+| Access clarity | 32.9 |
+
+**Agent readiness 26.6** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/owler/](https://apis.io/providers/owler/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Owler: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/owler/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
